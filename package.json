@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "browser-sync start --server"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/MatejMazur/tic-tac-toe/issues"
   },
-  "homepage": "https://github.com/MatejMazur/tic-tac-toe#readme"
+  "homepage": "https://github.com/MatejMazur/tic-tac-toe#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "browser-sync": "^2.18.8",
+    "runjs": "^3.2.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
 }

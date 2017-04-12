@@ -38,3 +38,5 @@
 7a. pokud funkce pro vítězný tah vrátí vítěznou řadu, tak se označí a vyskočí okno - vítěz s danou značkou
 7b. -||- 
 8.  po určité době se anuluje pole v JS i v HTML a náhodně se vybere začínající hráč, a uloží se nový stav skóre
+
+General recommendation => HOC
