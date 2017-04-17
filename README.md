@@ -1,15 +1,3 @@
-1. nastavení
-  - člověk vs člověk / člověk vs PC -> publish('type', PC: false/true)
-  - výběr X/O -> publish('marks', )
-2. status
-  - stats: vstupní parametry: skóre ([hráč1, hráč2]) -> on('score', [skóre hráče 1, skóre hráče 2])
-3. hra
-  - vstupní parametry: X/O, PC: false/true
-  - render políček (Handlebars)
-  - event listener -> #board -> delegace na jednotlivá políčka (.fields)
-    - aktualizace pole se stavem políček (null -> X/O (player[0/1].mark))
-    - publish('boardChanged', array)
-
 1. načtu stránku
 2. vyberu typ hry: a) hráč vs hráč / b) hráč vs PC
 3. vyberu si značku X / O
@@ -18,7 +6,7 @@
 6a. další hráč může označit políčko
 6b. PC označí nejvýhodnější políčko
 7. v případě remízy se zobrazí remíza
-7a. v případě výhry se zobrazí vítězná zpráva s vítěznou značkou
+7a. v případě výhry se zobrazí vítězná zpráva
 7b. v případě výhry hráče se zobrazí vítězná zpráva a v případě výhry PC se zobrazí prohra pro hráče
 8. změní se skóre
 9. načte se nová hra
