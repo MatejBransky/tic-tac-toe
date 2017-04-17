@@ -17,7 +17,7 @@
       <p class="header__description">FreeCodeCamp project</p>
     </header>
 
-    <main class="main">
+    <main class="main" id="js-main">
     </main>
 
     <footer class="footer">
@@ -27,61 +27,67 @@
     </footer>
   </div>
 
-  <script id="template-type-of-game" type="text/template">
+  <script id="template-types-of-game" type="text/template">
     <!-- {type: [players: ['Human', 'PC'], players: [..., ...]]} -->
-    <div class="type">
+    <div class="type" id="js-type">
       <h1 class="type__title">Type of game</h1>
-      {{#0}}
-      <a class="type__option" href="#" data-index="{{ @index }}">
-        {{#1}}
-        <div class="option__player">{{ . }}</div>
-        {{/1}}
-      </a> 
-      {{/0}}
+      {{#each types}}
+      <a class="type__option js-option" href="#" data-index="{{ @index }}">
+        {{#each this}}
+        <div class="option__player">{{ this }}</div>
+        {{/each}}
+      </a> {{/each}}
     </div>
   </script>
 
   <script id="template-marks" type="text/template">
     <div class="marks">
       <div class="marks__player">
-        <div class="player__type">{{ players[0].type }}</div>
-        <div class="player__mark">{{ players[0].mark }}</div>
+        <div class="player__type">{{ players.[0] }}</div>
+        <div class="player__mark js-mark">{{ marks.[0] }}</div>
       </div>
-      <a class="marks__switch" href="#">
-        <<br />></a>
+      <a class="marks__switch" href="#" id="js-switch-marks">
+        < <br /> >
+      </a>
       <div class="marks__player">
-        <div class="player__type">{{ players[1].type }}</div>
-        <div class="player__mark">{{ players[1].mark }}</div>
+        <div class="player__type">{{ players.[1] }}</div>
+        <div class="player__mark js-mark">{{ marks.[1] }}</div>
       </div>
     </div>
+    <a href="#" class="button" id="js-load-game">Start</a>
   </script>
 
   <script id="template-game" type="text/template">
     <div class="game">
       <div class="game__stats">
         <div class="stats__marks">
-          {{#player.mark}}
-          <div class="stats__player">{{ . }}}</div>
-          {{/player.mark}}
+          {{#players.marks}}
+          <div class="stats__player">{{ . }}</div>
+          {{/players.marks}}
         </div>
         <div class="stats__score">
           <h1 class="score__title">Score</h1>
           <div class="score__main">
-            {{#player.score}}
+            {{#players.score}}
             <div class="score__player">{{ . }}</div>
-            {{/player.score}}
+            {{/players.score}}
           </div>
         </div>
       </div>
-      <div class="game__board">
+      <div class="game__board" id="js-board">
         {{#board}}
-        <div class="board__field" data-index="{{ @index }}">{{ . }}</div>
+        <div class="board__field js-field" data-index="{{ @index }}">{{ . }}</div>
         {{/board}}
       </div>
-      <div class="game__status">Next player: {{ nextPlayer }}</div>
+      <div class="game__status">Next player: <span id="js-status">{{ currentPlayer }}</span></div>
     </div>
   </script>
 
+  <script src="helpers.js"></script>
+  <script src="pubsub.js"></script>
+  <script src="dom.js"></script>
+  <script src="logic.js"></script>
+  <script src="events.js"></script>
   <script src="index.js"></script>
 </body>
 

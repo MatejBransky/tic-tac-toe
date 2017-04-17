@@ -2,7 +2,7 @@
   - člověk vs člověk / člověk vs PC -> publish('type', PC: false/true)
   - výběr X/O -> publish('marks', )
 2. status
-  - stats: vstupní parametry: skóre ([hráč1, hráč2]) -> subscribe('score', [skóre hráče 1, skóre hráče 2])
+  - stats: vstupní parametry: skóre ([hráč1, hráč2]) -> on('score', [skóre hráče 1, skóre hráče 2])
 3. hra
   - vstupní parametry: X/O, PC: false/true
   - render políček (Handlebars)
@@ -25,7 +25,7 @@
 
 1.  HTML pro nastavení typu hry a inicializuje se stav skóre [0, 0]
     setScore(winner: player 0/1)
-    events.subscribe('winEnd', setScore)
+    events.on('winEnd', setScore)
 2.  po výběru typu hry se to uloží do nastavení a změní se HTML pro výběr značky
 3.  po výběru značky se uloží značky do nastavení a změní se HTML pro hru (game(nastavení))
 4.  HTML: načte se blok se skórem, značkami pro hráče, kdo je první na řadě
