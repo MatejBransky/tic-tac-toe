@@ -2,8 +2,13 @@ const switcher = (a, b) => [a, b] = [b, a]
 
 const isEmpty = (input) => input === null
 
-const load = (element) => (data) => element.innerHTML = data
+const load = (targetId) => (templateId) => (data) => {
+  const target = document.getElementById(targetId)
+  const template = document.getElementById(templateId).innerHTML
+  return target.innerHTML = Handlebars.compile(template)(data)
+}
 
+const loadTemplate = load('js-main')
 
 /**
  * click listener
@@ -12,19 +17,21 @@ const load = (element) => (data) => element.innerHTML = data
  *  delegate = class of descendant elements or their parents
  *  action = what to do after click
  */
-const listen = ({ id, delegate = null, action }) => {
+const listen = ({ id, delegate = null, action }, value = null) => {
+  if (value) return value
   const element = document.getElementById(id)
   element.addEventListener('click', ({ target }) => {
     if (delegate) {
-      if (target.className.indexOf(delegate) === -1 || target.parentNode.className.indexOf(delegate) === -1) return
+      if (!(target.className.indexOf(delegate) !== -1
+        || target.parentNode.className.indexOf(delegate) !== -1)) return
       const getElement = () =>
         target.className.indexOf(delegate) === -1
           ? target.parentNode
           : target
       const element = getElement()
-      action(element)
+      return listenTypes(action(element))
     } else {
-      action(target)
+      return listen({ id, delegate, action }, action(target))
     }
   })
 }
