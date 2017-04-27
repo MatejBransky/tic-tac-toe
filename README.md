@@ -1,30 +1,101 @@
-1. načtu stránku
-2. vyberu typ hry: a) hráč vs hráč / b) hráč vs PC
-3. vyberu si značku X / O
-4. načte se hra: nulové skóre, prázdná hrací plocha s políčky
-5. kliknu na políčko a označí se mojí značkou
-6a. další hráč může označit políčko
-6b. PC označí nejvýhodnější políčko
-7. v případě remízy se zobrazí remíza
-7a. v případě výhry se zobrazí vítězná zpráva
-7b. v případě výhry hráče se zobrazí vítězná zpráva a v případě výhry PC se zobrazí prohra pro hráče
-8. změní se skóre
-9. načte se nová hra
+# Gist
+(More declarative way)
 
-1.  HTML pro nastavení typu hry a inicializuje se stav skóre [0, 0]
-    setScore(winner: player 0/1)
-    events.on('winEnd', setScore)
-2.  po výběru typu hry se to uloží do nastavení a změní se HTML pro výběr značky
-3.  po výběru značky se uloží značky do nastavení a změní se HTML pro hru (game(nastavení))
-4.  HTML: načte se blok se skórem, značkami pro hráče, kdo je první na řadě
-    HTML: načte se prázdná hrací plocha a přiřadí se eventlistener(click) k hrací ploše
-5.  po kliknutí na políčko se označí znakem aktivního hráče a uloží se do pole (fields), 
-    ověří se, jestli to není vítězný tah a pokud ano, tak vrátí vítěznou/é řadu/y, pokud ne, tak se změní aktivní hráč
-6a. hraje stejně jako předchozí a opět se ověří vítězný tah
-6b. spustí se funkce pro vyhodnocení nejlepšího tahu a poté označí toto políčko
-7.  pokud není vítězný tah a všechna pole jsou plná, tak vyskočí okno - remíza
-7a. pokud funkce pro vítězný tah vrátí vítěznou řadu, tak se označí a vyskočí okno - vítěz s danou značkou
-7b. -||- 
-8.  po určité době se anuluje pole v JS i v HTML a náhodně se vybere začínající hráč, a uloží se nový stav skóre
+## CZ
+### Ve zkratce:
+Po načtení HTML se provede `events.publish('init')` >> načte se první template s výběrem typu hry >> po výběru typu hry - `events.publish('typeDone', data: type)` >> načte se druhý template s výběrem značek >> po výběru značek - `events.publish('marksDone', data: {type, marks})` >> načte se template hry a inicializuje se model hry.
 
-General recommendation => HOC
+Model hry bude uložen jako *module revealing pattern*.
+Při inicializaci modelu hry jsou zapotřebí vstupní parametry: typ hry (`ai = 0 / 1`) a nastavení značek (`marks = ['X', 'O']`). Tyto parametry se uloží do objektu state:
+
+```javascript
+const state = {
+    ai: true/false, // typ hry
+    marks: ['O', 'X'],
+    current: Math.round(Math.random()), // index aktuálního hráče: 0/1 -> marks[current]
+    board: new Array(9).fill(null), // pole políček obsahuje pod každým políčkem značku: null/'O'/'X'
+    empty: [0,1,2,3,4,5,6,7,8] // indexy prázdných políček
+}
+```
+
+### AI
+Pokud je vstupní parametr typu hry roven 1, nastaví se hra pro hru s PC.
+
+```javascript
+function getReply(ai) {
+    const replies = [
+        events.publish('moveDone'),
+        events.publish('replyAi', data: state)
+    ]
+    return replies[ai]
+}
+...
+function answer({marks, board, empty})
+```
+
+### Hra
+Při kliknutí na políčko se ověří, zda-li bylo kliknuto v `board` na políčko `field`, pokud ano, tak se zavolá funkce `play(move)`, kde *move* je index políčka (index políčka se získá z atributu `data-index=1` tagu).
+
+#### Funkce `play(move)`
+- změní značku políčka
+
+```javascript
+state.board[index] = state.marks[state.current]
+```
+
+- ověří, zda-li není hra u konce (výhra/remíza) funkcí `control(state)`
+- pokud je hra u konce, tak zavolá `events.publish('gameEnded', data: status)`
+- pokud není, tak se změní index aktuálního hráče
+
+```javascript
+const play = move => pipe(
+    updateBoard, // aktualizuj pole s políčky | move => state
+    ifContinue(pipe( // ověř, jestli to není poslední nebo vítězný tah | state => state 
+        changeCurrent, // pokud hra pokračuje, změň index aktuálního hráče | state => state
+        ifAi(reply) // pokud je protivník AI, tak odpověz protitahem | state => move
+        )
+    )
+)(move)
+
+function updateBoard (move) {
+    return pipe(
+        getMark, // move => {index, mark}
+        setBoard // {index, mark} => state
+    )(move)
+}
+
+setState(curry(assocPath([...], mark, state))(_, _, state)(['board', index], mark))
+pipe( // nešlo by použít R.lensPath? :D
+    update(state.board), // (index, mark) => (R.curry umožňuje vynechat vstupní parametry)
+    assoc(state), // array board => ... state
+)
+
+function setBoard ({index, mark}) {
+    pipe(
+        getState,
+        { board } => {
+            board[index] = mark
+            return board
+        },
+        setState({ board })
+    )({index, mark})
+}
+
+const ifContinue = fn => state => (state.empty.length || !isWin(state)) ? fn(state) : false
+
+const ifAi = fn => state => state.ai ? fn(state) : false
+```
+
+...
+
+```javascript
+function setState (props) {
+    return state = Object.assign({}, state, props)
+}
+```
+
+```javascript
+function isWin({board}) {
+    // projeď winLines
+}
+```

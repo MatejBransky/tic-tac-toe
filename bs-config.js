@@ -19,7 +19,7 @@ module.exports = {
       'port': 8080
     }
   },
-  'files': ['./*.html', './*.js'],
+  'files': ['./*.html', './js/*.js'],
   'watchEvents': [
     'change'
   ],
