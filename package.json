@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MatejMazur/tic-tac-toe#readme",
   "devDependencies": {
-    "browser-sync": "^2.18.8"
+    "browser-sync": "^2.18.8",
+    "eslint": "^3.19.0"
   }
 }

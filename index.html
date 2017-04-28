@@ -7,7 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Tic Tac Toe Game</title>
   <link rel="stylesheet" href="style.css">
-  <script src="vendor/handlebars-v4.0.5.js"></script>
 </head>
 
 <body>
@@ -27,16 +26,19 @@
     </footer>
   </div>
 
-  <script id="template-types-of-game" type="text/template">
-    <!-- {type: [players: ['Human', 'PC'], players: [..., ...]]} -->
-    <div class="type" id="js-types">
+
+  <script id="template-types" type="text/template">
+    <div class="type">
       <h1 class="type__title">Type of game</h1>
-      {{#each types}}
-      <a class="type__option js-option" href="#" data-index="{{ @index }}">
-        {{#each this}}
-        <div class="option__player">{{ this }}</div>
+      <div id="js-types">
+        {{#each types}}
+        <a class="type__option js-option" href="#" data-ai="{{ ai }}">
+          {{#each names}}
+          <div class="option__player">{{ this }}</div>
+          {{/each}}
+        </a> 
         {{/each}}
-      </a> {{/each}}
+      </div>
     </div>
   </script>
 
@@ -83,6 +85,9 @@
     </div>
   </script>
 
+  <script src="js/ramda.js"></script>
+  <script src="js/handlebars.js"></script>
+  <script src="js/pubsub.js"></script>
   <script src="js/index.js"></script>
 </body>
 

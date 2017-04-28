@@ -1,68 +1,108 @@
-const game = (() => {
-  const state = {
-    type: undefined,
-    marks: undefined,
-    board: new Array(9).fill(null),
-    currentPlayer: Math.round(Math.random())
-  }
-  const winLines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ]
+/* ==========================================================================
+ * Used libraries: Ramda, Handlebars, custom Pub/Sub pattern
+ * ========================================================================== */
 
-  function setType(index) {
-    const types = [
-      ['Human', 'Human'],
-      ['Human', 'PC']
-    ]
-    
-    return state.type = types[index]
-  }
+const pipe = R.pipe
+const compile = Handlebars.compile
+const on = events.on
+const publish = events.publish
 
-  function setMarks(index) {
-    const marks = [
-      ['X', 'O'],
-      ['O', 'X']
-    ]
-    
-    return state.marks = marks[index]
-  }
 
-  function play(index) {
-    let player = state.currentPlayer
-    const mark = state.marks[player]
-    const board = state.board
-    board[index] = mark
+/* ==========================================================================
+ * Tools
+ * ========================================================================== */
 
-    if (control({ board, mark, index }) === 3) {
-      return console.log(`${state.marks[player]} wins!`)
-    } else {
-      return state.currentPlayer = player === 1 ? 0 : 1
-    }
-  }
-
-  function control({ board, mark, index }) {
-    const lines = winLines.filter(line => line.indexOf(index) !== -1)
-    const output = lines.filter(line => {
-      return line.map(index => board[index] === mark)
-    })
-    return output
-  }
-
+const el = name => document.getElementById(name)
+const load = input => document.getElementById('js-main').innerHTML = input
+const read = id => document.getElementById(id).innerHTML
+const produce = id => {
+  const insert = pipe(
+    read,
+    compile
+  )(id)
   return {
-    setType,
-    setMarks,
-    play,
-    state
+    with: data => insert(data)
   }
-})()
+}
+const listen = ({container = null, part = null, target = null}) => {
+  const then = action => {
+    if (target && !container && !part) {
+      const element = el(target)
+      element.addEventListener('click', ({ target }) => action(target))
 
-// game.setType(1)
-// game.setMarks(0)
-// game.play(0 - 8)
+    } else if (container && part && !target) {
+      const outer = el(container)
+      outer.addEventListener('click', ({ target }) => {
+        const array = [target, target.parentNode]
+          .filter(el => el.classList.contains(part))
+        if (array.length) return action(array[0])
+      })
+    } else {
+      return false
+    }
+
+    return true
+  }
+
+  return { then }
+}
+
+
+/* ==========================================================================
+ * View - settings
+ * ========================================================================== */
+
+const loadTypes = () => {
+  const data = {
+    types: [
+      {
+        names: ['Human', 'Human'],
+        ai: false
+      },
+      {
+        names: ['Human', 'PC'],
+        ai: true
+      }
+    ]
+  }
+
+  const html = produce('template-types').with(data)
+  load(html)
+  return listen({container: 'js-types', part: 'js-option'})
+    .then(element => {
+      const { index } = element.dataset
+      const output = data.types[index]
+      publish('typeSelected', output)
+    })
+}
+
+const loadMarks = (type) => {
+  const data = Object.assign({}, type, )
+  const html = produce('template-marks').with()
+}
+
+const loadGame = (settings) => {
+  const data = {
+    
+  }
+}
+
+/* ==========================================================================
+ * Game logic
+ * ========================================================================== */
+
+const setGame = (settings) => move => {
+
+}
+
+const process = setGame()
+
+/* ==========================================================================
+ * Events
+ * ========================================================================== */
+
+on('init', loadTypes)
+on('typeSelected', loadMarks)
+on('marksDone', loadGame)
+
+const start = () => publish('init')
