@@ -24,7 +24,7 @@ const produce = id => {
     with: data => insert(data)
   }
 }
-const listen = ({container = null, part = null, target = null}) => {
+const listen = ({ container = null, part = null, target = null }) => {
   const then = action => {
     if (target && !container && !part) {
       const element = el(target)
@@ -68,23 +68,81 @@ const loadTypes = () => {
 
   const html = produce('template-types').with(data)
   load(html)
-  return listen({container: 'js-types', part: 'js-option'})
-    .then(element => {
-      const { index } = element.dataset
+  return listen({ container: 'js-types', part: 'js-option' })
+    .then(clicked => {
+      const { index } = clicked.dataset
       const output = data.types[index]
-      publish('typeSelected', output)
+      publish('typeDone', output)
     })
 }
 
-const loadMarks = (type) => {
-  const data = Object.assign({}, type, )
-  const html = produce('template-marks').with()
+const loadMarks = ({ names, ai }) => {
+  const data = {
+    players: [
+      {
+        name: names[0],
+        mark: 'X'
+      },
+      {
+        name: names[1],
+        mark: 'O'
+      }
+    ]
+  }
+  const html = produce('template-marks').with(data)
+  load(html)
+
+  const marks = (() => {
+    const els = document.getElementsByClassName('js-mark')
+    return {
+      get: () => [els[0].innerHTML, els[1].innerHTML],
+      set: (markA, markB) => [els[0].innerHTML = markA, els[1].innerHTML = markB]
+    }
+  })()
+  const getMarks = marks.get
+  const setMarks = marks.set
+  const switchMarks = () => { // TODO
+    const [mark1, mark2] = getMarks()
+    return setMarks(mark2, mark1)
+  }
+
+  listen({ target: 'js-switch' })
+    .then(switchMarks)
+  listen({ target: 'js-submit' })
+    .then(() => {
+      const settings = { // TODO
+        ai,
+        marks: getMarks()
+      }
+      publish('settingsDone', settings)
+    })
 }
 
-const loadGame = (settings) => {
+const loadGame = ({ ai, marks }) => {
   const data = {
-    
+    marks,
+    score: [0, 0],
+    board: [0,0,0]
+      .fill([0,0,0])
+      .map((row, y) => row
+        .map((cell, x) => ({x, y}))),
+    current: Math.round(Math.random())
   }
+  const html = produce('template-game').with(data)
+  load(html)
+
+  const mark = field => {
+    if (field.innerHTML !== '') return
+    field.innerHTML = marks[data.current]
+    data.current = data.current === 1 ? 0 : 1
+  }
+
+  listen({ container: 'js-board', part: 'js-field' })
+    .then(field => {
+      const [x, y] = field.dataset
+      mark(field)
+      // process({x, y})
+    })
 }
 
 /* ==========================================================================
@@ -101,8 +159,11 @@ const process = setGame()
  * Events
  * ========================================================================== */
 
-on('init', loadTypes)
-on('typeSelected', loadMarks)
-on('marksDone', loadGame)
+// on('init', loadTypes)
+// on('typeDone', loadMarks)
+// on('typeDone', console.log)
+// on('marksDone', loadGame)
 
 const start = () => publish('init')
+
+loadGame({ai: true, marks: ['X', 'O']})

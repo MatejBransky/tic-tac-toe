@@ -32,56 +32,55 @@
       <h1 class="type__title">Type of game</h1>
       <div id="js-types">
         {{#each types}}
-        <a class="type__option js-option" href="#" data-ai="{{ ai }}">
+        <a class="type__option js-option" href="#" data-index="{{ @index }}">
           {{#each names}}
           <div class="option__player">{{ this }}</div>
           {{/each}}
-        </a> 
-        {{/each}}
+        </a> {{/each}}
       </div>
     </div>
   </script>
 
   <script id="template-marks" type="text/template">
     <div class="marks">
+      {{#each players}}
       <div class="marks__player">
-        <div class="player__type">{{ players.[0] }}</div>
-        <div class="player__mark js-mark">{{ marks.[0] }}</div>
+        <div class="player__type">{{ name }}</div>
+        <div class="player__mark js-mark">{{ mark }}</div>
       </div>
-      <a class="marks__switch" href="#" id="js-switch-marks">
+      {{/each}}
+      <a class="marks__switch" href="#" id="js-switch">
         < <br /> >
       </a>
-      <div class="marks__player">
-        <div class="player__type">{{ players.[1] }}</div>
-        <div class="player__mark js-mark">{{ marks.[1] }}</div>
-      </div>
     </div>
-    <a href="#" class="button" id="js-load-game">Start</a>
+    <a href="#" class="button" id="js-submit">Start</a>
   </script>
 
   <script id="template-game" type="text/template">
     <div class="game">
       <div class="game__stats">
         <div class="stats__marks">
-          {{#players.marks}}
-          <div class="stats__player">{{ . }}</div>
-          {{/players.marks}}
+          {{#each marks}}
+          <div class="stats__player">{{ this }}</div>
+          {{/each}}
         </div>
         <div class="stats__score">
           <h1 class="score__title">Score</h1>
           <div class="score__main">
-            {{#players.score}}
-            <div class="score__player">{{ . }}</div>
-            {{/players.score}}
+            {{#each score}}
+            <div class="score__player">{{ this }}</div>
+            {{/each}}
           </div>
         </div>
       </div>
       <div class="game__board" id="js-board">
-        {{#board}}
-        <div class="board__field js-field" data-index="{{ @index }}">{{ . }}</div>
-        {{/board}}
+        {{#each board}}
+          {{#each this}}
+          <div class="board__field js-field" data-x="{{ x }}" data-y="{{ y }}"></div>
+          {{/each}}
+        {{/each}}
       </div>
-      <div class="game__status">Next player: <span id="js-status">{{ currentPlayer }}</span></div>
+      <div class="game__status">Next player: <span id="js-status">{{ current }}</span></div>
     </div>
   </script>
 
