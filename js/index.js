@@ -40,10 +40,8 @@ const listen = ({container = null, part = null, target = null}) => {
     } else {
       return false
     }
-
     return true
   }
-
   return { then }
 }
 
@@ -83,7 +81,6 @@ const loadMarks = (type) => {
 
 const loadGame = (settings) => {
   const data = {
-    
   }
 }
 
