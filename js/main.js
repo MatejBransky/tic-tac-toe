@@ -5,8 +5,7 @@ import types from './types/types'
 // import game from './game/game'
 
 stream(
-  types,
-  x => console.log('výstup: ', x)
+  types
   // marks,
   // game
 )(state)
