@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "browser-sync start --config bs-config.js"
+    "compile": "rollup -c -w",
+    "serve": "browser-sync start --config bs-config.js",
+    "test": "concurrently \"npm run compile\" \"npm run serve\""
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,13 @@
   "homepage": "https://github.com/MatejMazur/tic-tac-toe#readme",
   "devDependencies": {
     "browser-sync": "^2.18.8",
-    "eslint": "^3.19.0"
+    "concurrently": "^3.4.0",
+    "eslint": "^3.19.0",
+    "handlebars": "^4.0.7",
+    "ramda": "^0.23.0",
+    "rollup": "^0.41.6",
+    "rollup-plugin-json": "^2.1.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^3.2.2"
   }
 }

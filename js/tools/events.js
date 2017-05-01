@@ -19,3 +19,9 @@ const events = (() => {
     publish
   }
 })()
+
+export const 
+  on = events.on,
+  publish = events.publish
+
+export default events

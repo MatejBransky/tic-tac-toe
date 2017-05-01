@@ -2,7 +2,7 @@
  * Used libraries: Ramda, Handlebars, custom Pub/Sub pattern
  * ========================================================================== */
 
-const pipe = R.pipe
+const pipe = (...fns) => x => fns.reduce((v, f) => f(v), x)
 const compile = Handlebars.compile
 const on = events.on
 const publish = events.publish
@@ -46,6 +46,14 @@ const listen = ({ container = null, part = null, target = null }) => {
 
   return { then }
 }
+const markField = ({ field, mark }) => {
+  if (field.innerHTML !== '') return false
+  return field.innerHTML = mark
+}
+const updateStatus = status => document.getElementById('js-status').innerHTML = status
+const control = board => {
+  console.log(board)
+}
 
 
 /* ==========================================================================
@@ -71,10 +79,18 @@ const loadTypes = () => {
   return listen({ container: 'js-types', part: 'js-option' })
     .then(clicked => {
       const { index } = clicked.dataset
-      const output = data.types[index]
+      const names = [
+        ['Player 1', 'Player 2'],
+        ['Player', 'PC']
+      ]
+      const output = {
+        ai: data.types[index].ai,
+        names: names[index]
+      }
       publish('typeDone', output)
     })
 }
+
 
 const loadMarks = ({ names, ai }) => {
   const data = {
@@ -118,52 +134,80 @@ const loadMarks = ({ names, ai }) => {
     })
 }
 
+
 const loadGame = ({ ai, marks }) => {
   const data = {
     marks,
     score: [0, 0],
-    board: [0,0,0]
-      .fill([0,0,0])
-      .map((row, y) => row
-        .map((cell, x) => ({x, y}))),
-    current: Math.round(Math.random())
+    board: [0, 0, 0].fill([0, 1, 2])
+      .map((row, y) => row.map(x => ({ x, y }))),
+    current: marks[Math.round(Math.random())]
   }
   const html = produce('template-game').with(data)
   load(html)
 
-  const mark = field => {
-    if (field.innerHTML !== '') return
-    field.innerHTML = marks[data.current]
-    data.current = data.current === 1 ? 0 : 1
+  const settings = {
+    ai,
+    marks,
+    current: marks.indexOf(data.current)
   }
-
-  listen({ container: 'js-board', part: 'js-field' })
-    .then(field => {
-      const [x, y] = field.dataset
-      mark(field)
-      // process({x, y})
-    })
+  publish('gameLoaded', settings)
 }
+
+
+let processMove
+const setGame = ({ ai, marks, current }) => {
+  const board = [0,0,0].fill([null,null,null])
+  const markAi = marks[1]
+  if (ai) {
+    processMove = ({ x, y, mark }) => {
+      board[y, x] = mark
+      control(board) // TODO
+      const next = current ? 0 : 1
+      const isAiNext = next === 1
+      if (isAiNext) publish('aiTurn', { board, mark: markAi })
+    }
+  } else {
+    processMove = ({ x, y, mark }) => {
+      board[y, x] = mark
+      control(board) // TODO
+      const next = current ? 0 : 1
+    }
+  }
+  publish('gamePrepared', { marks, current })
+  return processMove
+}
+
+
+const listenGame = ({ marks, current }) => listen({ container: 'js-board', part: 'js-field' })
+  .then(field => {
+    const { x, y } = field.dataset
+    const index = current
+    const mark = marks[index]
+    if (!markField({ field, mark })) return
+    current = index ? 0 : 1
+    updateStatus(marks[current])
+    publish('moveDone', { x, y, mark })
+  })
+
 
 /* ==========================================================================
  * Game logic
  * ========================================================================== */
 
-const setGame = (settings) => move => {
-
-}
-
-const process = setGame()
+const evaluate = () => {}
 
 /* ==========================================================================
  * Events
  * ========================================================================== */
 
-// on('init', loadTypes)
-// on('typeDone', loadMarks)
-// on('typeDone', console.log)
-// on('marksDone', loadGame)
+on('init', loadTypes)
+on('typeDone', loadMarks)
+on('settingsDone', loadGame)
+on('gameLoaded', setGame)
+on('gamePrepared', listenGame)
+on('moveDone', processMove)
+on('aiTurn', evaluate)
+on('aiAnswered', processMove)
 
-const start = () => publish('init')
-
-loadGame({ai: true, marks: ['X', 'O']})
+publish('init')
