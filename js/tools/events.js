@@ -14,14 +14,17 @@ const events = (() => {
       return result
     }, [])
   }
+  const call = topic => data => publish(topic, data)
   return {
     on,
-    publish
+    publish,
+    call
   }
 })()
 
 export const 
   on = events.on,
-  publish = events.publish
+  publish = events.publish,
+  call = events.call
 
 export default events
