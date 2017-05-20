@@ -7,14 +7,13 @@ import MarksView from './view/marksView'
 
 app({
   state: {
-    route: '/',
     type: 0,
     marks: ['X', 'O'],
     score: [0, 0]
   },
 
   view: {
-    '/': (state, { setType, router }) =>
+    '*': (state, { setType, router }) =>
       <TypesView onClick={ type => { 
         setType(type)
         router.go('/marks')
@@ -35,21 +34,5 @@ app({
     setRoute: route => ({ route })
   },
 
-  plugins: [ Router ],
-
-  events: {
-    route: ({ route }, { setRoute, router }) => {
-      switch (route) {
-        case '/types':
-          setRoute('/marks')
-          return router.go('/marks')
-        case '/marks':
-          setRoute('/game')
-          return router.go('/game')
-        default:
-          setRoute('/')
-          return router.go('/')
-      }
-    }
-  }
+  plugins: [ Router ]
 })

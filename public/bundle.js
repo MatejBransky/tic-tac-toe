@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,9 +72,9 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(6);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_0__h__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "app", function() { return __WEBPACK_IMPORTED_MODULE_1__app__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return __WEBPACK_IMPORTED_MODULE_2__router__["a"]; });
@@ -86,9 +86,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111,7 +109,7 @@ var MarksView = function MarksView() {
 exports.default = MarksView;
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -166,7 +164,7 @@ var TypesView = function TypesView(_ref2) {
 exports.default = TypesView;
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -174,11 +172,11 @@ exports.default = TypesView;
 
 var _hyperapp = __webpack_require__(0);
 
-var _typesView = __webpack_require__(4);
+var _typesView = __webpack_require__(2);
 
 var _typesView2 = _interopRequireDefault(_typesView);
 
-var _marksView = __webpack_require__(3);
+var _marksView = __webpack_require__(1);
 
 var _marksView2 = _interopRequireDefault(_marksView);
 
@@ -189,14 +187,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _hyperapp.app)({
   state: {
-    route: '/',
     type: 0,
     marks: ['X', 'O'],
     score: [0, 0]
   },
 
   view: {
-    '/': function _(state, _ref) {
+    '*': function _(state, _ref) {
       var setType = _ref.setType,
           router = _ref.router;
       return (0, _hyperapp.h)(_typesView2.default, { onClick: function onClick(type) {
@@ -226,31 +223,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     }
   },
 
-  plugins: [_hyperapp.Router],
-
-  events: {
-    route: function route(_ref3, _ref4) {
-      var _route = _ref3.route;
-      var setRoute = _ref4.setRoute,
-          router = _ref4.router;
-
-      switch (_route) {
-        case '/types':
-          setRoute('/marks');
-          return router.go('/marks');
-        case '/marks':
-          setRoute('/game');
-          return router.go('/game');
-        default:
-          setRoute('/');
-          return router.go('/');
-      }
-    }
-  }
+  plugins: [_hyperapp.Router]
 });
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -522,7 +499,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -559,7 +536,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

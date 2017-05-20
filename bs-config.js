@@ -1,4 +1,4 @@
-
+const historyApiFallback = require('connect-history-api-fallback')
 /*
  |--------------------------------------------------------------------------
  | Browser-sync config file
@@ -26,7 +26,10 @@ module.exports = {
     'watchOptions': {
         'ignoreInitial': true
     },
-    'server': 'public',
+    'server': {
+        baseDir: 'public',
+        middleware: [ historyApiFallback() ]
+    },
     'proxy': false,
     'port': 3000,
     'middleware': false,
