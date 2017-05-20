@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,9 +72,9 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(8);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_0__h__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "app", function() { return __WEBPACK_IMPORTED_MODULE_1__app__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return __WEBPACK_IMPORTED_MODULE_2__router__["a"]; });
@@ -86,7 +86,87 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var MarksView = function MarksView() {
+  return (0, _hyperapp.h)(
+    "div",
+    { className: "marks" },
+    "marks view"
+  );
+};
+
+exports.default = MarksView;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var types = [['Player', 'Player'], ['Player', 'PC']];
+
+var TypesOptions = function TypesOptions(_ref) {
+  var onClick = _ref.onClick,
+      types = _ref.types;
+  return (0, _hyperapp.h)(
+    'div',
+    { className: 'types__options' },
+    types.map(function (type, idType) {
+      return (0, _hyperapp.h)(
+        'button',
+        { key: idType, onclick: function onclick() {
+            return onClick(idType);
+          }, className: 'types__item' },
+        type.map(function (player, idPlayer) {
+          return (0, _hyperapp.h)(
+            'div',
+            { key: idPlayer, className: 'types__player' },
+            player
+          );
+        })
+      );
+    })
+  );
+};
+
+var TypesView = function TypesView(_ref2) {
+  var onClick = _ref2.onClick;
+  return (0, _hyperapp.h)(
+    'div',
+    { className: 'types' },
+    (0, _hyperapp.h)(
+      'h1',
+      { className: 'types__title' },
+      'Type of game'
+    ),
+    (0, _hyperapp.h)(TypesOptions, { onClick: onClick, types: types })
+  );
+};
+
+exports.default = TypesView;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -94,19 +174,83 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 var _hyperapp = __webpack_require__(0);
 
+var _typesView = __webpack_require__(4);
+
+var _typesView2 = _interopRequireDefault(_typesView);
+
+var _marksView = __webpack_require__(3);
+
+var _marksView2 = _interopRequireDefault(_marksView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import GameView from './view/gameView'
+// import Game from './plugins/game'
+
 (0, _hyperapp.app)({
-  state: "Hi",
-  view: function view(state) {
-    return (0, _hyperapp.h)(
-      "h1",
-      null,
-      state
-    );
+  state: {
+    route: '/',
+    type: 0,
+    marks: ['X', 'O'],
+    score: [0, 0]
+  },
+
+  view: {
+    '/': function _(state, _ref) {
+      var setType = _ref.setType,
+          router = _ref.router;
+      return (0, _hyperapp.h)(_typesView2.default, { onClick: function onClick(type) {
+          setType(type);
+          router.go('/marks');
+        } });
+    },
+    '/marks': function marks(state, _ref2) {
+      var setMarks = _ref2.setMarks,
+          router = _ref2.router;
+      return (0, _hyperapp.h)(_marksView2.default, { onclick: function onclick(marks) {
+          setMarks(marks);
+          router.go('/game');
+        } });
+    }
+  },
+
+  actions: {
+    setType: function setType(type) {
+      return { type: type };
+    },
+    setMarks: function setMarks(marks) {
+      return { marks: marks };
+    },
+    setRoute: function setRoute(route) {
+      return { route: route };
+    }
+  },
+
+  plugins: [_hyperapp.Router],
+
+  events: {
+    route: function route(_ref3, _ref4) {
+      var _route = _ref3.route;
+      var setRoute = _ref4.setRoute,
+          router = _ref4.router;
+
+      switch (_route) {
+        case '/types':
+          setRoute('/marks');
+          return router.go('/marks');
+        case '/marks':
+          setRoute('/game');
+          return router.go('/game');
+        default:
+          setRoute('/');
+          return router.go('/');
+      }
+    }
   }
 });
 
 /***/ }),
-/* 2 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -378,7 +522,7 @@ var _hyperapp = __webpack_require__(0);
 
 
 /***/ }),
-/* 3 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -415,7 +559,7 @@ var _hyperapp = __webpack_require__(0);
 
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -491,3 +635,4 @@ var _hyperapp = __webpack_require__(0);
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
