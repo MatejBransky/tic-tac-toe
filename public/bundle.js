@@ -121,34 +121,16 @@ Object.defineProperty(exports, "__esModule", {
 
 var _hyperapp = __webpack_require__(0);
 
-var types = [['Player', 'Player'], ['Player', 'PC']];
+var types = [{
+  playersNames: ['Player', 'Player'],
+  ai: false
+}, {
+  playersNames: ['Player', 'PC'],
+  ai: true
+}];
 
-var TypesOptions = function TypesOptions(_ref) {
-  var onClick = _ref.onClick,
-      types = _ref.types;
-  return (0, _hyperapp.h)(
-    'div',
-    { className: 'types__options' },
-    types.map(function (type, idType) {
-      return (0, _hyperapp.h)(
-        'button',
-        { key: idType, onclick: function onclick() {
-            return onClick(idType);
-          }, className: 'types__item' },
-        type.map(function (player, idPlayer) {
-          return (0, _hyperapp.h)(
-            'div',
-            { key: idPlayer, className: 'types__player' },
-            player
-          );
-        })
-      );
-    })
-  );
-};
-
-var TypesView = function TypesView(_ref2) {
-  var onClick = _ref2.onClick;
+var TypesView = function TypesView(_ref) {
+  var onClick = _ref.onClick;
   return (0, _hyperapp.h)(
     'div',
     { className: 'types' },
@@ -157,7 +139,25 @@ var TypesView = function TypesView(_ref2) {
       { className: 'types__title' },
       'Type of game'
     ),
-    (0, _hyperapp.h)(TypesOptions, { onClick: onClick, types: types })
+    (0, _hyperapp.h)(
+      'div',
+      { className: 'types__options' },
+      types.map(function (type, idType) {
+        return (0, _hyperapp.h)(
+          'button',
+          { key: idType, onclick: function onclick() {
+              return onClick(type);
+            }, className: 'types__item' },
+          type.playersNames.map(function (player, idPlayer) {
+            return (0, _hyperapp.h)(
+              'div',
+              { key: idPlayer, className: 'types__player' },
+              player
+            );
+          })
+        );
+      })
+    )
   );
 };
 
@@ -187,39 +187,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _hyperapp.app)({
   state: {
-    type: 0,
-    marks: ['X', 'O'],
+    ai: true,
+    players: [{ name: 'Player', mark: 'X' }, { name: 'PC', mark: 'O' }],
     score: [0, 0]
   },
 
   view: {
-    '*': function _(state, _ref) {
-      var setType = _ref.setType,
-          router = _ref.router;
-      return (0, _hyperapp.h)(_typesView2.default, { onClick: function onClick(type) {
-          setType(type);
+    '*': function _(state, actions) {
+      return (0, _hyperapp.h)(_typesView2.default, {
+        onClick: function onClick(type) {
+          actions.setAi(type.ai);
+          actions.setPlayers(type.playersNames);
           router.go('/marks');
         } });
     },
-    '/marks': function marks(state, _ref2) {
-      var setMarks = _ref2.setMarks,
-          router = _ref2.router;
-      return (0, _hyperapp.h)(_marksView2.default, { onclick: function onclick(marks) {
-          setMarks(marks);
+    '/marks': function marks(state, actions) {
+      return (0, _hyperapp.h)(_marksView2.default, {
+        players: state.players,
+        marks: state.marks,
+        onclick: function onclick(marks) {
+          actions.setMarks(marks);
           router.go('/game');
         } });
     }
   },
 
   actions: {
-    setType: function setType(type) {
-      return { type: type };
+    setAi: function setAi(state, actions, ai) {
+      return { ai: ai };
+    },
+    setPlayers: function setPlayers(state, actions, playersNames) {
+      return { players: players };
     },
     setMarks: function setMarks(marks) {
       return { marks: marks };
-    },
-    setRoute: function setRoute(route) {
-      return { route: route };
     }
   },
 

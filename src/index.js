@@ -7,31 +7,41 @@ import MarksView from './view/marksView'
 
 app({
   state: {
-    type: 0,
-    marks: ['X', 'O'],
+    ai: true,
+    players: [
+      { name: 'Player', mark: 'X' },
+      { name: 'PC', mark: 'O' }
+    ],
     score: [0, 0]
   },
 
   view: {
-    '*': (state, { setType, router }) =>
-      <TypesView onClick={ type => { 
-        setType(type)
-        router.go('/marks')
+    '*': (state, actions) =>
+      <TypesView 
+        onClick={ type => { 
+          actions.setAi(type.ai)
+          actions.setPlayers(type.playersNames)
+          router.go('/marks')
         }
       } />,
-    '/marks': (state, { setMarks, router }) =>
-      <MarksView onclick={ marks => {
-        setMarks(marks)
-        router.go('/game')
+    '/marks': (state, actions) =>
+      <MarksView
+        players={ state.players }
+        marks={ state.marks }
+        onclick={ marks => {
+          actions.setMarks(marks)
+          router.go('/game')
         }
       } />,
     // '/game': <GameView settings={ state } />
   },
 
   actions: {
-    setType: type => ({ type }),
-    setMarks: marks => ({ marks }),
-    setRoute: route => ({ route })
+    setAi: (state, actions, ai) => ({ ai }),
+    setPlayers: (state, actions, playersNames) =>
+      playersNames.map((name, index) => 
+        state.players[index].name = name),
+    setMarks: marks => ({ marks })
   },
 
   plugins: [ Router ]
