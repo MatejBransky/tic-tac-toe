@@ -1,5 +1,0 @@
-export default (settings) => ({
-  state: {
-    
-  }
-})

@@ -6,4 +6,13 @@ const GameView = () => (
   </div>
 )
 
-export default GameView
+const Game = settings => ({
+  state: {
+    
+  }
+})
+
+export {
+  GameView,
+  Game
+}

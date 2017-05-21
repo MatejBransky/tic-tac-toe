@@ -95,18 +95,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.MarksView = undefined;
 
 var _hyperapp = __webpack_require__(0);
 
-var MarksView = function MarksView() {
+var MarksView = function MarksView(_ref) {
+  var data = _ref.data,
+      switchMarks = _ref.switchMarks,
+      setMarks = _ref.setMarks;
   return (0, _hyperapp.h)(
     "div",
     { className: "marks" },
-    "marks view"
+    data.map(function (player, index) {
+      return (0, _hyperapp.h)(
+        "div",
+        { id: index, className: "marks__player" },
+        (0, _hyperapp.h)(
+          "div",
+          { className: "marks__name" },
+          player.name
+        ),
+        (0, _hyperapp.h)(
+          "div",
+          { className: "marks__mark" },
+          player.mark
+        )
+      );
+    }),
+    (0, _hyperapp.h)(
+      "button",
+      { onclick: function onclick() {
+          return switchMarks(data);
+        }, className: "marks__switch" },
+      "switch"
+    ),
+    (0, _hyperapp.h)(
+      "button",
+      { onclick: function onclick() {
+          return setMarks(data);
+        }, className: "marks__submit" },
+      "submit"
+    )
   );
 };
 
-exports.default = MarksView;
+exports.MarksView = MarksView;
 
 /***/ }),
 /* 2 */
@@ -118,40 +151,34 @@ exports.default = MarksView;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.TypesView = undefined;
 
 var _hyperapp = __webpack_require__(0);
 
-var types = [{
-  playersNames: ['Player', 'Player'],
-  ai: false
-}, {
-  playersNames: ['Player', 'PC'],
-  ai: true
-}];
-
 var TypesView = function TypesView(_ref) {
-  var onClick = _ref.onClick;
+  var data = _ref.data,
+      setType = _ref.setType;
   return (0, _hyperapp.h)(
-    'div',
-    { className: 'types' },
+    "div",
+    { className: "types" },
     (0, _hyperapp.h)(
-      'h1',
-      { className: 'types__title' },
-      'Type of game'
+      "h1",
+      { className: "types__title" },
+      "Type of game"
     ),
     (0, _hyperapp.h)(
-      'div',
-      { className: 'types__options' },
-      types.map(function (type, idType) {
+      "div",
+      { className: "types__options" },
+      data.map(function (type, idType) {
         return (0, _hyperapp.h)(
-          'button',
+          "button",
           { key: idType, onclick: function onclick() {
-              return onClick(type);
-            }, className: 'types__item' },
+              return setType(type);
+            }, className: "types__item" },
           type.playersNames.map(function (player, idPlayer) {
             return (0, _hyperapp.h)(
-              'div',
-              { key: idPlayer, className: 'types__player' },
+              "div",
+              { key: idPlayer, className: "types__player" },
               player
             );
           })
@@ -161,7 +188,7 @@ var TypesView = function TypesView(_ref) {
   );
 };
 
-exports.default = TypesView;
+exports.TypesView = TypesView;
 
 /***/ }),
 /* 3 */
@@ -172,42 +199,45 @@ exports.default = TypesView;
 
 var _hyperapp = __webpack_require__(0);
 
-var _typesView = __webpack_require__(2);
+var _types = __webpack_require__(2);
 
-var _typesView2 = _interopRequireDefault(_typesView);
+var _marks = __webpack_require__(1);
 
-var _marksView = __webpack_require__(1);
-
-var _marksView2 = _interopRequireDefault(_marksView);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import GameView from './view/gameView'
-// import Game from './plugins/game'
+// import { GameView, Game } from './game'
 
 (0, _hyperapp.app)({
   state: {
-    ai: true,
-    players: [{ name: 'Player', mark: 'X' }, { name: 'PC', mark: 'O' }],
-    score: [0, 0]
+    typesData: [{
+      playersNames: ['Player', 'Player'],
+      ai: false
+    }, {
+      playersNames: ['Player', 'PC'],
+      ai: true
+    }],
+    marksData: [{ name: '', mark: 'X' }, { name: '', mark: 'O' }],
+    gameData: {
+      players: [{ name: '', mark: '', score: 0 }, { name: '', mark: '', score: 0 }],
+      ai: false
+    }
   },
 
   view: {
     '*': function _(state, actions) {
-      return (0, _hyperapp.h)(_typesView2.default, {
-        onClick: function onClick(type) {
+      return (0, _hyperapp.h)(_types.TypesView, {
+        data: state.typesData,
+        setType: function setType(type) {
           actions.setAi(type.ai);
           actions.setPlayers(type.playersNames);
-          router.go('/marks');
+          actions.router.go('/marks');
         } });
     },
     '/marks': function marks(state, actions) {
-      return (0, _hyperapp.h)(_marksView2.default, {
-        players: state.players,
-        marks: state.marks,
-        onclick: function onclick(marks) {
-          actions.setMarks(marks);
-          router.go('/game');
+      return (0, _hyperapp.h)(_marks.MarksView, {
+        data: state.marksData,
+        switchMarks: actions.switchMarks,
+        setMarks: function setMarks(players) {
+          actions.setMarks(players);
+          console.log(state.gameData);
         } });
     }
   },
@@ -217,10 +247,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
       return { ai: ai };
     },
     setPlayers: function setPlayers(state, actions, playersNames) {
-      return { players: players };
+      return {
+        marksData: [{ name: playersNames[0], mark: 'X' }, { name: playersNames[1], mark: 'O' }]
+      };
     },
-    setMarks: function setMarks(marks) {
-      return { marks: marks };
+    switchMarks: function switchMarks(state, actions, players) {
+      return {
+        marksData: [{ name: players[0].name, mark: players[1].mark }, { name: players[1].name, mark: players[0].mark }]
+      };
+    },
+    setMarks: function setMarks(state, actions, players) {
+      return {
+        gameData: {
+          players: [{ name: players[0].name, mark: players[0].mark, score: state.gameData.players[0].score }, { name: players[1].name, mark: players[1].mark, score: state.gameData.players[1].score }]
+        }
+      };
     }
   },
 
