@@ -1,13 +1,15 @@
 import { h } from 'hyperapp'
 
-const TypesView = ({ data, setType }) => (
+const TypesView = ({ data, actions }) => (
   <div className="types">
     <h1 className="types__title">Type of game</h1>
     <div className="types__options">
       {data.map((type, idType) =>
-        <button key={idType} onclick={() => setType(type)} className="types__item">
+        <button className="types__item" key={idType} onclick={() => actions.setType(type)}>
           {type.players.map((player, idPlayer) =>
-            <div key={idPlayer} className="types__player">{ player.name }</div>
+            <div className="types__player" key={idPlayer}>
+              { player.name }
+            </div>
           )}
         </button>
       )}

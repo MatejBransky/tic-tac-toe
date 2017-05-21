@@ -8,26 +8,18 @@ export default {
   '/': (state, actions) =>
     <TypesView
       data={state.types}
-      setType={type => {
-        actions.setAi(type.ai)
-        actions.setPlayers(type.players)
-        actions.router.go('/marks')
-      }}
+      actions={actions.types}
     />,
 
   '/marks': (state, actions) =>
     <MarksView
       data={state.marks}
-      switchMarks={actions.switchMarks}
-      setMarks={players => {
-        actions.setMarks(players)
-        actions.router.go('/game')
-      }}
+      actions={actions.marks}
     />,
 
   '/game': (state, actions) =>
     <GameView
       data={state.game}
-      actions={actions}
+      actions={actions.game}
     />
 }

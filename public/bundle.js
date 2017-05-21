@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,9 +72,9 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(17);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_0__h__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "app", function() { return __WEBPACK_IMPORTED_MODULE_1__app__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return __WEBPACK_IMPORTED_MODULE_2__router__["a"]; });
@@ -210,138 +210,195 @@ module.exports = function _has(prop, obj) {
 
 
 /***/ }),
-/* 6 */,
-/* 7 */,
-/* 8 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var _merge = __webpack_require__(25);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _assocPath = __webpack_require__(19);
+
+var _assocPath2 = _interopRequireDefault(_assocPath);
+
+var _reverse = __webpack_require__(26);
+
+var _reverse2 = _interopRequireDefault(_reverse);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  types: {
+    setAi: function setAi(state, actions, ai) {
+      return (0, _assocPath2.default)(['game', 'ai'], ai, state);
+    },
+    setPlayers: function setPlayers(state, actions, players) {
+      return {
+        marks: {
+          players: state.marks.players.map(function (player, index) {
+            return (0, _merge2.default)(player, players[index]);
+          })
+        }
+      };
+    },
+    setType: function setType(state, actions, type) {
+      actions.types.setAi(type.ai);
+      actions.types.setPlayers(type.players);
+      actions.router.go('/marks');
+    }
+  },
+
+  marks: {
+    switchMarks: function switchMarks(state, actions, players) {
+      var marks = (0, _reverse2.default)(state.marks.players.map(function (player) {
+        return player.mark;
+      }));
+      return {
+        marks: {
+          players: state.marks.players.map(function (player, index) {
+            return (0, _merge2.default)(player, { mark: marks[index] });
+          })
+        }
+      };
+    },
+    setGame: function setGame(state, actions, players) {
+      return {
+        game: { players: (0, _merge2.default)(state.game.players, players) }
+      };
+    },
+    setMarks: function setMarks(state, actions, players) {
+      actions.marks.setGame(players);
+      actions.router.go('/game');
+    }
+  }
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  loaded: function loaded(state, actions) {
+    return state.router.match !== '/' && actions.router.go('/');
+  },
+  update: function update(state, actions, data) {
+    return console.log(JSON.stringify(data));
+  }
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+exports.default = [_hyperapp.Router];
+
+/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _curry3 = __webpack_require__(4);
-var _has = __webpack_require__(5);
-var _isArray = __webpack_require__(18);
-var _isInteger = __webpack_require__(19);
-var assoc = __webpack_require__(16);
+"use strict";
 
 
-/**
- * Makes a shallow clone of an object, setting or overriding the nodes required
- * to create the given path, and placing the specific value at the tail end of
- * that path. Note that this copies and flattens prototype properties onto the
- * new object as well. All non-primitive properties are copied by reference.
- *
- * @func
- * @memberOf R
- * @since v0.8.0
- * @category Object
- * @typedefn Idx = String | Int
- * @sig [Idx] -> a -> {a} -> {a}
- * @param {Array} path the path to set
- * @param {*} val The new value
- * @param {Object} obj The object to clone
- * @return {Object} A new object equivalent to the original except along the specified path.
- * @see R.dissocPath
- * @example
- *
- *      R.assocPath(['a', 'b', 'c'], 42, {a: {b: {c: 0}}}); //=> {a: {b: {c: 42}}}
- *
- *      // Any missing or non-object keys in path will be overridden
- *      R.assocPath(['a', 'b', 'c'], 42, {a: 5}); //=> {a: {b: {c: 42}}}
- */
-module.exports = _curry3(function assocPath(path, val, obj) {
-  if (path.length === 0) {
-    return val;
-  }
-  var idx = path[0];
-  if (path.length > 1) {
-    var nextObj = _has(idx, obj) ? obj[idx] : _isInteger(path[1]) ? [] : {};
-    val = assocPath(Array.prototype.slice.call(path, 1), val, nextObj);
-  }
-  if (_isInteger(idx) && _isArray(obj)) {
-    var arr = [].concat(obj);
-    arr[idx] = val;
-    return arr;
-  } else {
-    return assoc(idx, val, obj);
-  }
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+exports.default = {
+  types: [{
+    players: [{ name: 'Player' }, { name: 'Player' }],
+    ai: false
+  }, {
+    players: [{ name: 'Player' }, { name: 'PC' }],
+    ai: true
+  }],
 
+  marks: {
+    players: [{ name: '', mark: 'X' }, { name: '', mark: 'O' }]
+  },
+
+  game: {
+    players: [{ name: '', mark: '', score: 0 }, { name: '', mark: '', score: 0 }],
+    ai: false,
+    current: 0,
+    board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+  }
+};
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _assign = __webpack_require__(17);
-var _curry2 = __webpack_require__(3);
+"use strict";
 
 
-/**
- * Create a new object with the own properties of the first object merged with
- * the own properties of the second object. If a key exists in both objects,
- * the value from the second object will be used.
- *
- * @func
- * @memberOf R
- * @since v0.1.0
- * @category Object
- * @sig {k: v} -> {k: v} -> {k: v}
- * @param {Object} l
- * @param {Object} r
- * @return {Object}
- * @see R.mergeWith, R.mergeWithKey
- * @example
- *
- *      R.merge({ 'name': 'fred', 'age': 10 }, { 'age': 40 });
- *      //=> { 'name': 'fred', 'age': 40 }
- *
- *      var resetToDefault = R.merge(R.__, {x: 0});
- *      resetToDefault({x: 5, y: 2}); //=> {x: 0, y: 2}
- * @symb R.merge({ x: 1, y: 2 }, { y: 5, z: 3 }) = { x: 1, y: 5, z: 3 }
- */
-module.exports = _curry2(function merge(l, r) {
-  return _assign({}, l, r);
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
 
+var _hyperapp = __webpack_require__(0);
+
+var _types = __webpack_require__(14);
+
+var _types2 = _interopRequireDefault(_types);
+
+var _marks = __webpack_require__(13);
+
+var _marks2 = _interopRequireDefault(_marks);
+
+var _game = __webpack_require__(12);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  '/': function _(state, actions) {
+    return (0, _hyperapp.h)(_types2.default, {
+      data: state.types,
+      actions: actions.types
+    });
+  },
+
+  '/marks': function marks(state, actions) {
+    return (0, _hyperapp.h)(_marks2.default, {
+      data: state.marks,
+      actions: actions.marks
+    });
+  },
+
+  '/game': function game(state, actions) {
+    return (0, _hyperapp.h)(_game2.default, {
+      data: state.game,
+      actions: actions.game
+    });
+  }
+};
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _curry1 = __webpack_require__(1);
-var _isString = __webpack_require__(20);
-
-
-/**
- * Returns a new list or string with the elements or characters in reverse
- * order.
- *
- * @func
- * @memberOf R
- * @since v0.1.0
- * @category List
- * @sig [a] -> [a]
- * @sig String -> String
- * @param {Array|String} list
- * @return {Array|String}
- * @example
- *
- *      R.reverse([1, 2, 3]);  //=> [3, 2, 1]
- *      R.reverse([1, 2]);     //=> [2, 1]
- *      R.reverse([1]);        //=> [1]
- *      R.reverse([]);         //=> []
- *
- *      R.reverse('abc');      //=> 'cba'
- *      R.reverse('ab');       //=> 'ba'
- *      R.reverse('a');        //=> 'a'
- *      R.reverse('');         //=> ''
- */
-module.exports = _curry1(function reverse(list) {
-  return _isString(list) ? list.split('').reverse().join('') :
-                           Array.prototype.slice.call(list, 0).reverse();
-});
-
-
-/***/ }),
-/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -349,23 +406,23 @@ module.exports = _curry1(function reverse(list) {
 
 var _hyperapp = __webpack_require__(0);
 
-var _state = __webpack_require__(22);
+var _state = __webpack_require__(9);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _view = __webpack_require__(24);
+var _view = __webpack_require__(10);
 
 var _view2 = _interopRequireDefault(_view);
 
-var _actions = __webpack_require__(23);
+var _actions = __webpack_require__(6);
 
 var _actions2 = _interopRequireDefault(_actions);
 
-var _events = __webpack_require__(25);
+var _events = __webpack_require__(7);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _plugins = __webpack_require__(26);
+var _plugins = __webpack_require__(8);
 
 var _plugins2 = _interopRequireDefault(_plugins);
 
@@ -380,7 +437,134 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var GameView = function GameView(_ref) {
+  var data = _ref.data,
+      actions = _ref.actions;
+  return (0, _hyperapp.h)(
+    "div",
+    { className: "game" },
+    "game view"
+  );
+};
+
+exports.default = GameView;
+
+/***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var MarksView = function MarksView(_ref) {
+  var data = _ref.data,
+      actions = _ref.actions;
+  return (0, _hyperapp.h)(
+    "div",
+    { className: "marks" },
+    data.players.map(function (player, index) {
+      return (0, _hyperapp.h)(
+        "div",
+        { id: index, className: "marks__player" },
+        (0, _hyperapp.h)(
+          "div",
+          { className: "marks__name" },
+          player.name
+        ),
+        (0, _hyperapp.h)(
+          "div",
+          { className: "marks__mark" },
+          player.mark
+        )
+      );
+    }),
+    (0, _hyperapp.h)(
+      "button",
+      { onclick: function onclick() {
+          return actions.switchMarks(data);
+        }, className: "marks__switch" },
+      "switch"
+    ),
+    (0, _hyperapp.h)(
+      "button",
+      { onclick: function onclick() {
+          return actions.setMarks(data.players);
+        }, className: "marks__submit" },
+      "submit"
+    )
+  );
+};
+
+exports.default = MarksView;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _hyperapp = __webpack_require__(0);
+
+var TypesView = function TypesView(_ref) {
+  var data = _ref.data,
+      actions = _ref.actions;
+  return (0, _hyperapp.h)(
+    "div",
+    { className: "types" },
+    (0, _hyperapp.h)(
+      "h1",
+      { className: "types__title" },
+      "Type of game"
+    ),
+    (0, _hyperapp.h)(
+      "div",
+      { className: "types__options" },
+      data.map(function (type, idType) {
+        return (0, _hyperapp.h)(
+          "button",
+          { className: "types__item", key: idType, onclick: function onclick() {
+              return actions.setType(type);
+            } },
+          type.players.map(function (player, idPlayer) {
+            return (0, _hyperapp.h)(
+              "div",
+              { className: "types__player", key: idPlayer },
+              player.name
+            );
+          })
+        );
+      })
+    )
+  );
+};
+
+exports.default = TypesView;
+
+/***/ }),
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -652,7 +836,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -689,7 +873,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -764,7 +948,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _curry3 = __webpack_require__(4);
@@ -801,17 +985,71 @@ module.exports = _curry3(function assoc(prop, val, obj) {
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _objectAssign = __webpack_require__(21);
+var _curry3 = __webpack_require__(4);
+var _has = __webpack_require__(5);
+var _isArray = __webpack_require__(21);
+var _isInteger = __webpack_require__(22);
+var assoc = __webpack_require__(18);
+
+
+/**
+ * Makes a shallow clone of an object, setting or overriding the nodes required
+ * to create the given path, and placing the specific value at the tail end of
+ * that path. Note that this copies and flattens prototype properties onto the
+ * new object as well. All non-primitive properties are copied by reference.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.8.0
+ * @category Object
+ * @typedefn Idx = String | Int
+ * @sig [Idx] -> a -> {a} -> {a}
+ * @param {Array} path the path to set
+ * @param {*} val The new value
+ * @param {Object} obj The object to clone
+ * @return {Object} A new object equivalent to the original except along the specified path.
+ * @see R.dissocPath
+ * @example
+ *
+ *      R.assocPath(['a', 'b', 'c'], 42, {a: {b: {c: 0}}}); //=> {a: {b: {c: 42}}}
+ *
+ *      // Any missing or non-object keys in path will be overridden
+ *      R.assocPath(['a', 'b', 'c'], 42, {a: 5}); //=> {a: {b: {c: 42}}}
+ */
+module.exports = _curry3(function assocPath(path, val, obj) {
+  if (path.length === 0) {
+    return val;
+  }
+  var idx = path[0];
+  if (path.length > 1) {
+    var nextObj = _has(idx, obj) ? obj[idx] : _isInteger(path[1]) ? [] : {};
+    val = assocPath(Array.prototype.slice.call(path, 1), val, nextObj);
+  }
+  if (_isInteger(idx) && _isArray(obj)) {
+    var arr = [].concat(obj);
+    arr[idx] = val;
+    return arr;
+  } else {
+    return assoc(idx, val, obj);
+  }
+});
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _objectAssign = __webpack_require__(24);
 
 module.exports =
   typeof Object.assign === 'function' ? Object.assign : _objectAssign;
 
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /**
@@ -834,7 +1072,7 @@ module.exports = Array.isArray || function _isArray(val) {
 
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /**
@@ -851,7 +1089,7 @@ module.exports = Number.isInteger || function _isInteger(n) {
 
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function _isString(x) {
@@ -860,7 +1098,7 @@ module.exports = function _isString(x) {
 
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _has = __webpack_require__(5);
@@ -890,314 +1128,78 @@ module.exports = function _objectAssign(target) {
 
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  types: [{
-    players: [{ name: 'Player' }, { name: 'Player' }],
-    ai: false
-  }, {
-    players: [{ name: 'Player' }, { name: 'PC' }],
-    ai: true
-  }],
-
-  marks: {
-    players: [{ name: '', mark: 'X' }, { name: '', mark: 'O' }]
-  },
-
-  game: {
-    players: [{ name: '', mark: '', score: 0 }, { name: '', mark: '', score: 0 }],
-    ai: false,
-    current: 0,
-    board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-  }
-};
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _hyperapp = __webpack_require__(0);
-
-var _merge = __webpack_require__(10);
-
-var _merge2 = _interopRequireDefault(_merge);
-
-var _assocPath = __webpack_require__(9);
-
-var _assocPath2 = _interopRequireDefault(_assocPath);
-
-var _reverse = __webpack_require__(11);
-
-var _reverse2 = _interopRequireDefault(_reverse);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-  setAi: function setAi(state, actions, ai) {
-    return (0, _assocPath2.default)(['game', 'ai'], ai, state);
-  },
-  setPlayers: function setPlayers(state, actions, players) {
-    return {
-      marks: {
-        players: state.marks.players.map(function (player, index) {
-          return (0, _merge2.default)(player, players[index]);
-        })
-      }
-    };
-  },
-
-  switchMarks: function switchMarks(state, actions, players) {
-    var marks = (0, _reverse2.default)(state.marks.players.map(function (player) {
-      return player.mark;
-    }));
-    return {
-      marks: {
-        players: state.marks.players.map(function (player, index) {
-          return (0, _merge2.default)(player, { mark: marks[index] });
-        })
-      }
-    };
-  },
-  setMarks: function setMarks(state, actions, players) {
-    return {
-      game: { players: (0, _merge2.default)(state.game.players, players) }
-    };
-  }
-};
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _hyperapp = __webpack_require__(0);
-
-var _types = __webpack_require__(29);
-
-var _types2 = _interopRequireDefault(_types);
-
-var _marks = __webpack_require__(28);
-
-var _marks2 = _interopRequireDefault(_marks);
-
-var _game = __webpack_require__(27);
-
-var _game2 = _interopRequireDefault(_game);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-  '/': function _(state, actions) {
-    return (0, _hyperapp.h)(_types2.default, {
-      data: state.types,
-      setType: function setType(type) {
-        actions.setAi(type.ai);
-        actions.setPlayers(type.players);
-        actions.router.go('/marks');
-      }
-    });
-  },
-
-  '/marks': function marks(state, actions) {
-    return (0, _hyperapp.h)(_marks2.default, {
-      data: state.marks,
-      switchMarks: actions.switchMarks,
-      setMarks: function setMarks(players) {
-        actions.setMarks(players);
-        actions.router.go('/game');
-      }
-    });
-  },
-
-  '/game': function game(state, actions) {
-    return (0, _hyperapp.h)(_game2.default, {
-      data: state.game,
-      actions: actions
-    });
-  }
-};
-
-/***/ }),
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var _assign = __webpack_require__(20);
+var _curry2 = __webpack_require__(3);
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+/**
+ * Create a new object with the own properties of the first object merged with
+ * the own properties of the second object. If a key exists in both objects,
+ * the value from the second object will be used.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Object
+ * @sig {k: v} -> {k: v} -> {k: v}
+ * @param {Object} l
+ * @param {Object} r
+ * @return {Object}
+ * @see R.mergeWith, R.mergeWithKey
+ * @example
+ *
+ *      R.merge({ 'name': 'fred', 'age': 10 }, { 'age': 40 });
+ *      //=> { 'name': 'fred', 'age': 40 }
+ *
+ *      var resetToDefault = R.merge(R.__, {x: 0});
+ *      resetToDefault({x: 5, y: 2}); //=> {x: 0, y: 2}
+ * @symb R.merge({ x: 1, y: 2 }, { y: 5, z: 3 }) = { x: 1, y: 5, z: 3 }
+ */
+module.exports = _curry2(function merge(l, r) {
+  return _assign({}, l, r);
 });
-exports.default = {
-  loaded: function loaded(state, actions) {
-    return state.router.match !== '/' && actions.router.go('/');
-  },
-  update: function update(state, actions, data) {
-    return console.log(JSON.stringify(data));
-  }
-};
+
 
 /***/ }),
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var _curry1 = __webpack_require__(1);
+var _isString = __webpack_require__(23);
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+/**
+ * Returns a new list or string with the elements or characters in reverse
+ * order.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig [a] -> [a]
+ * @sig String -> String
+ * @param {Array|String} list
+ * @return {Array|String}
+ * @example
+ *
+ *      R.reverse([1, 2, 3]);  //=> [3, 2, 1]
+ *      R.reverse([1, 2]);     //=> [2, 1]
+ *      R.reverse([1]);        //=> [1]
+ *      R.reverse([]);         //=> []
+ *
+ *      R.reverse('abc');      //=> 'cba'
+ *      R.reverse('ab');       //=> 'ba'
+ *      R.reverse('a');        //=> 'a'
+ *      R.reverse('');         //=> ''
+ */
+module.exports = _curry1(function reverse(list) {
+  return _isString(list) ? list.split('').reverse().join('') :
+                           Array.prototype.slice.call(list, 0).reverse();
 });
 
-var _hyperapp = __webpack_require__(0);
-
-exports.default = [_hyperapp.Router];
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _hyperapp = __webpack_require__(0);
-
-var GameView = function GameView(_ref) {
-  var data = _ref.data;
-  return (0, _hyperapp.h)(
-    "div",
-    { className: "game" },
-    "game view"
-  );
-};
-
-exports.default = GameView;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _hyperapp = __webpack_require__(0);
-
-var MarksView = function MarksView(_ref) {
-  var data = _ref.data,
-      switchMarks = _ref.switchMarks,
-      setMarks = _ref.setMarks;
-  return (0, _hyperapp.h)(
-    "div",
-    { className: "marks" },
-    data.players.map(function (player, index) {
-      return (0, _hyperapp.h)(
-        "div",
-        { id: index, className: "marks__player" },
-        (0, _hyperapp.h)(
-          "div",
-          { className: "marks__name" },
-          player.name
-        ),
-        (0, _hyperapp.h)(
-          "div",
-          { className: "marks__mark" },
-          player.mark
-        )
-      );
-    }),
-    (0, _hyperapp.h)(
-      "button",
-      { onclick: function onclick() {
-          return switchMarks(data);
-        }, className: "marks__switch" },
-      "switch"
-    ),
-    (0, _hyperapp.h)(
-      "button",
-      { onclick: function onclick() {
-          return setMarks(data.players);
-        }, className: "marks__submit" },
-      "submit"
-    )
-  );
-};
-
-exports.default = MarksView;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _hyperapp = __webpack_require__(0);
-
-var TypesView = function TypesView(_ref) {
-  var data = _ref.data,
-      setType = _ref.setType;
-  return (0, _hyperapp.h)(
-    "div",
-    { className: "types" },
-    (0, _hyperapp.h)(
-      "h1",
-      { className: "types__title" },
-      "Type of game"
-    ),
-    (0, _hyperapp.h)(
-      "div",
-      { className: "types__options" },
-      data.map(function (type, idType) {
-        return (0, _hyperapp.h)(
-          "button",
-          { key: idType, onclick: function onclick() {
-              return setType(type);
-            }, className: "types__item" },
-          type.players.map(function (player, idPlayer) {
-            return (0, _hyperapp.h)(
-              "div",
-              { key: idPlayer, className: "types__player" },
-              player.name
-            );
-          })
-        );
-      })
-    )
-  );
-};
-
-exports.default = TypesView;
 
 /***/ })
 /******/ ]);
