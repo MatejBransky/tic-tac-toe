@@ -1,18 +1,9 @@
 import { h } from 'hyperapp'
 
-const GameView = () => (
+const GameView = ({ data }) => (
   <div className="game">
     game view
   </div>
 )
 
-const Game = settings => ({
-  state: {
-    
-  }
-})
-
-export {
-  GameView,
-  Game
-}
+export default GameView

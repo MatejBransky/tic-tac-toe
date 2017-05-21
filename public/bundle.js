@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,9 +72,9 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__h__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(15);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_0__h__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "app", function() { return __WEBPACK_IMPORTED_MODULE_1__app__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return __WEBPACK_IMPORTED_MODULE_2__router__["a"]; });
@@ -89,13 +89,160 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var _isPlaceholder = __webpack_require__(2);
+
+
+/**
+ * Optimized internal one-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+module.exports = function _curry1(fn) {
+  return function f1(a) {
+    if (arguments.length === 0 || _isPlaceholder(a)) {
+      return f1;
+    } else {
+      return fn.apply(this, arguments);
+    }
+  };
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = function _isPlaceholder(a) {
+  return a != null &&
+         typeof a === 'object' &&
+         a['@@functional/placeholder'] === true;
+};
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _curry1 = __webpack_require__(1);
+var _isPlaceholder = __webpack_require__(2);
+
+
+/**
+ * Optimized internal two-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+module.exports = function _curry2(fn) {
+  return function f2(a, b) {
+    switch (arguments.length) {
+      case 0:
+        return f2;
+      case 1:
+        return _isPlaceholder(a) ? f2
+             : _curry1(function(_b) { return fn(a, _b); });
+      default:
+        return _isPlaceholder(a) && _isPlaceholder(b) ? f2
+             : _isPlaceholder(a) ? _curry1(function(_a) { return fn(_a, b); })
+             : _isPlaceholder(b) ? _curry1(function(_b) { return fn(a, _b); })
+             : fn(a, b);
+    }
+  };
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _curry1 = __webpack_require__(1);
+var _curry2 = __webpack_require__(3);
+var _isPlaceholder = __webpack_require__(2);
+
+
+/**
+ * Optimized internal three-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+module.exports = function _curry3(fn) {
+  return function f3(a, b, c) {
+    switch (arguments.length) {
+      case 0:
+        return f3;
+      case 1:
+        return _isPlaceholder(a) ? f3
+             : _curry2(function(_b, _c) { return fn(a, _b, _c); });
+      case 2:
+        return _isPlaceholder(a) && _isPlaceholder(b) ? f3
+             : _isPlaceholder(a) ? _curry2(function(_a, _c) { return fn(_a, b, _c); })
+             : _isPlaceholder(b) ? _curry2(function(_b, _c) { return fn(a, _b, _c); })
+             : _curry1(function(_c) { return fn(a, b, _c); });
+      default:
+        return _isPlaceholder(a) && _isPlaceholder(b) && _isPlaceholder(c) ? f3
+             : _isPlaceholder(a) && _isPlaceholder(b) ? _curry2(function(_a, _b) { return fn(_a, _b, c); })
+             : _isPlaceholder(a) && _isPlaceholder(c) ? _curry2(function(_a, _c) { return fn(_a, b, _c); })
+             : _isPlaceholder(b) && _isPlaceholder(c) ? _curry2(function(_b, _c) { return fn(a, _b, _c); })
+             : _isPlaceholder(a) ? _curry1(function(_a) { return fn(_a, b, c); })
+             : _isPlaceholder(b) ? _curry1(function(_b) { return fn(a, _b, c); })
+             : _isPlaceholder(c) ? _curry1(function(_c) { return fn(a, b, _c); })
+             : fn(a, b, c);
+    }
+  };
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = function _has(prop, obj) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MarksView = undefined;
+
+var _hyperapp = __webpack_require__(0);
+
+var GameView = function GameView(_ref) {
+  var data = _ref.data;
+  return (0, _hyperapp.h)(
+    "div",
+    { className: "game" },
+    "game view"
+  );
+};
+
+exports.default = GameView;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _hyperapp = __webpack_require__(0);
 
@@ -106,7 +253,7 @@ var MarksView = function MarksView(_ref) {
   return (0, _hyperapp.h)(
     "div",
     { className: "marks" },
-    data.map(function (player, index) {
+    data.players.map(function (player, index) {
       return (0, _hyperapp.h)(
         "div",
         { id: index, className: "marks__player" },
@@ -132,17 +279,17 @@ var MarksView = function MarksView(_ref) {
     (0, _hyperapp.h)(
       "button",
       { onclick: function onclick() {
-          return setMarks(data);
+          return setMarks(data.players);
         }, className: "marks__submit" },
       "submit"
     )
   );
 };
 
-exports.MarksView = MarksView;
+exports.default = MarksView;
 
 /***/ }),
-/* 2 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -151,7 +298,6 @@ exports.MarksView = MarksView;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TypesView = undefined;
 
 var _hyperapp = __webpack_require__(0);
 
@@ -175,11 +321,11 @@ var TypesView = function TypesView(_ref) {
           { key: idType, onclick: function onclick() {
               return setType(type);
             }, className: "types__item" },
-          type.playersNames.map(function (player, idPlayer) {
+          type.players.map(function (player, idPlayer) {
             return (0, _hyperapp.h)(
               "div",
               { key: idPlayer, className: "types__player" },
-              player
+              player.name
             );
           })
         );
@@ -188,10 +334,138 @@ var TypesView = function TypesView(_ref) {
   );
 };
 
-exports.TypesView = TypesView;
+exports.default = TypesView;
 
 /***/ }),
-/* 3 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _curry3 = __webpack_require__(4);
+var _has = __webpack_require__(5);
+var _isArray = __webpack_require__(18);
+var _isInteger = __webpack_require__(19);
+var assoc = __webpack_require__(16);
+
+
+/**
+ * Makes a shallow clone of an object, setting or overriding the nodes required
+ * to create the given path, and placing the specific value at the tail end of
+ * that path. Note that this copies and flattens prototype properties onto the
+ * new object as well. All non-primitive properties are copied by reference.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.8.0
+ * @category Object
+ * @typedefn Idx = String | Int
+ * @sig [Idx] -> a -> {a} -> {a}
+ * @param {Array} path the path to set
+ * @param {*} val The new value
+ * @param {Object} obj The object to clone
+ * @return {Object} A new object equivalent to the original except along the specified path.
+ * @see R.dissocPath
+ * @example
+ *
+ *      R.assocPath(['a', 'b', 'c'], 42, {a: {b: {c: 0}}}); //=> {a: {b: {c: 42}}}
+ *
+ *      // Any missing or non-object keys in path will be overridden
+ *      R.assocPath(['a', 'b', 'c'], 42, {a: 5}); //=> {a: {b: {c: 42}}}
+ */
+module.exports = _curry3(function assocPath(path, val, obj) {
+  if (path.length === 0) {
+    return val;
+  }
+  var idx = path[0];
+  if (path.length > 1) {
+    var nextObj = _has(idx, obj) ? obj[idx] : _isInteger(path[1]) ? [] : {};
+    val = assocPath(Array.prototype.slice.call(path, 1), val, nextObj);
+  }
+  if (_isInteger(idx) && _isArray(obj)) {
+    var arr = [].concat(obj);
+    arr[idx] = val;
+    return arr;
+  } else {
+    return assoc(idx, val, obj);
+  }
+});
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _assign = __webpack_require__(17);
+var _curry2 = __webpack_require__(3);
+
+
+/**
+ * Create a new object with the own properties of the first object merged with
+ * the own properties of the second object. If a key exists in both objects,
+ * the value from the second object will be used.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Object
+ * @sig {k: v} -> {k: v} -> {k: v}
+ * @param {Object} l
+ * @param {Object} r
+ * @return {Object}
+ * @see R.mergeWith, R.mergeWithKey
+ * @example
+ *
+ *      R.merge({ 'name': 'fred', 'age': 10 }, { 'age': 40 });
+ *      //=> { 'name': 'fred', 'age': 40 }
+ *
+ *      var resetToDefault = R.merge(R.__, {x: 0});
+ *      resetToDefault({x: 5, y: 2}); //=> {x: 0, y: 2}
+ * @symb R.merge({ x: 1, y: 2 }, { y: 5, z: 3 }) = { x: 1, y: 5, z: 3 }
+ */
+module.exports = _curry2(function merge(l, r) {
+  return _assign({}, l, r);
+});
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _curry1 = __webpack_require__(1);
+var _isString = __webpack_require__(20);
+
+
+/**
+ * Returns a new list or string with the elements or characters in reverse
+ * order.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig [a] -> [a]
+ * @sig String -> String
+ * @param {Array|String} list
+ * @return {Array|String}
+ * @example
+ *
+ *      R.reverse([1, 2, 3]);  //=> [3, 2, 1]
+ *      R.reverse([1, 2]);     //=> [2, 1]
+ *      R.reverse([1]);        //=> [1]
+ *      R.reverse([]);         //=> []
+ *
+ *      R.reverse('abc');      //=> 'cba'
+ *      R.reverse('ab');       //=> 'ba'
+ *      R.reverse('a');        //=> 'a'
+ *      R.reverse('');         //=> ''
+ */
+module.exports = _curry1(function reverse(list) {
+  return _isString(list) ? list.split('').reverse().join('') :
+                           Array.prototype.slice.call(list, 0).reverse();
+});
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -199,23 +473,47 @@ exports.TypesView = TypesView;
 
 var _hyperapp = __webpack_require__(0);
 
-var _types = __webpack_require__(2);
+var _merge = __webpack_require__(10);
 
-var _marks = __webpack_require__(1);
+var _merge2 = _interopRequireDefault(_merge);
 
-// import { GameView, Game } from './game'
+var _assocPath = __webpack_require__(9);
+
+var _assocPath2 = _interopRequireDefault(_assocPath);
+
+var _reverse = __webpack_require__(11);
+
+var _reverse2 = _interopRequireDefault(_reverse);
+
+var _types = __webpack_require__(8);
+
+var _types2 = _interopRequireDefault(_types);
+
+var _marks = __webpack_require__(7);
+
+var _marks2 = _interopRequireDefault(_marks);
+
+var _game = __webpack_require__(6);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _hyperapp.app)({
   state: {
-    typesData: [{
-      playersNames: ['Player', 'Player'],
+    types: [{
+      players: [{ name: 'Player' }, { name: 'Player' }],
       ai: false
     }, {
-      playersNames: ['Player', 'PC'],
+      players: [{ name: 'Player' }, { name: 'PC' }],
       ai: true
     }],
-    marksData: [{ name: '', mark: 'X' }, { name: '', mark: 'O' }],
-    gameData: {
+
+    marks: {
+      players: [{ name: '', mark: 'X' }, { name: '', mark: 'O' }]
+    },
+
+    game: {
       players: [{ name: '', mark: '', score: 0 }, { name: '', mark: '', score: 0 }],
       ai: false
     }
@@ -223,45 +521,65 @@ var _marks = __webpack_require__(1);
 
   view: {
     '*': function _(state, actions) {
-      return (0, _hyperapp.h)(_types.TypesView, {
-        data: state.typesData,
+      return (0, _hyperapp.h)(_types2.default, {
+        data: state.types,
         setType: function setType(type) {
           actions.setAi(type.ai);
-          actions.setPlayers(type.playersNames);
+          actions.setPlayers(type.players);
           actions.router.go('/marks');
-        } });
+        }
+      });
     },
     '/marks': function marks(state, actions) {
-      return (0, _hyperapp.h)(_marks.MarksView, {
-        data: state.marksData,
+      return (0, _hyperapp.h)(_marks2.default, {
+        data: state.marks,
         switchMarks: actions.switchMarks,
         setMarks: function setMarks(players) {
           actions.setMarks(players);
-          console.log(state.gameData);
-        } });
+          actions.router.go('/game');
+        }
+      });
+    },
+    '/game': function game(state, actions) {
+      return (0, _hyperapp.h)(_game2.default, { data: state.game });
     }
   },
 
   actions: {
     setAi: function setAi(state, actions, ai) {
-      return { ai: ai };
+      return (0, _assocPath2.default)(['game', 'ai'], ai, state);
     },
-    setPlayers: function setPlayers(state, actions, playersNames) {
+    setPlayers: function setPlayers(state, actions, players) {
       return {
-        marksData: [{ name: playersNames[0], mark: 'X' }, { name: playersNames[1], mark: 'O' }]
+        marks: {
+          players: state.marks.players.map(function (player, index) {
+            return (0, _merge2.default)(player, players[index]);
+          })
+        }
       };
     },
     switchMarks: function switchMarks(state, actions, players) {
+      var marks = (0, _reverse2.default)(state.marks.players.map(function (player) {
+        return player.mark;
+      }));
       return {
-        marksData: [{ name: players[0].name, mark: players[1].mark }, { name: players[1].name, mark: players[0].mark }]
+        marks: {
+          players: state.marks.players.map(function (player, index) {
+            return (0, _merge2.default)(player, { mark: marks[index] });
+          })
+        }
       };
     },
     setMarks: function setMarks(state, actions, players) {
       return {
-        gameData: {
-          players: [{ name: players[0].name, mark: players[0].mark, score: state.gameData.players[0].score }, { name: players[1].name, mark: players[1].mark, score: state.gameData.players[1].score }]
-        }
+        game: { players: (0, _merge2.default)(state.game.players, players) }
       };
+    }
+  },
+
+  events: {
+    update: function update(state, actions) {
+      return console.log(JSON.stringify(state, null, '\t'));
     }
   },
 
@@ -269,7 +587,7 @@ var _marks = __webpack_require__(1);
 });
 
 /***/ }),
-/* 4 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -541,7 +859,7 @@ var _marks = __webpack_require__(1);
 
 
 /***/ }),
-/* 5 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -578,7 +896,7 @@ var _marks = __webpack_require__(1);
 
 
 /***/ }),
-/* 6 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -650,6 +968,132 @@ var _marks = __webpack_require__(1);
     }
   }
 });
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _curry3 = __webpack_require__(4);
+
+
+/**
+ * Makes a shallow clone of an object, setting or overriding the specified
+ * property with the given value. Note that this copies and flattens prototype
+ * properties onto the new object as well. All non-primitive properties are
+ * copied by reference.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.8.0
+ * @category Object
+ * @sig String -> a -> {k: v} -> {k: v}
+ * @param {String} prop The property name to set
+ * @param {*} val The new value
+ * @param {Object} obj The object to clone
+ * @return {Object} A new object equivalent to the original except for the changed property.
+ * @see R.dissoc
+ * @example
+ *
+ *      R.assoc('c', 3, {a: 1, b: 2}); //=> {a: 1, b: 2, c: 3}
+ */
+module.exports = _curry3(function assoc(prop, val, obj) {
+  var result = {};
+  for (var p in obj) {
+    result[p] = obj[p];
+  }
+  result[prop] = val;
+  return result;
+});
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _objectAssign = __webpack_require__(21);
+
+module.exports =
+  typeof Object.assign === 'function' ? Object.assign : _objectAssign;
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+/**
+ * Tests whether or not an object is an array.
+ *
+ * @private
+ * @param {*} val The object to test.
+ * @return {Boolean} `true` if `val` is an array, `false` otherwise.
+ * @example
+ *
+ *      _isArray([]); //=> true
+ *      _isArray(null); //=> false
+ *      _isArray({}); //=> false
+ */
+module.exports = Array.isArray || function _isArray(val) {
+  return (val != null &&
+          val.length >= 0 &&
+          Object.prototype.toString.call(val) === '[object Array]');
+};
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+/**
+ * Determine if the passed argument is an integer.
+ *
+ * @private
+ * @param {*} n
+ * @category Type
+ * @return {Boolean}
+ */
+module.exports = Number.isInteger || function _isInteger(n) {
+  return (n << 0) === n;
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = function _isString(x) {
+  return Object.prototype.toString.call(x) === '[object String]';
+};
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _has = __webpack_require__(5);
+
+// Based on https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+module.exports = function _objectAssign(target) {
+  if (target == null) {
+    throw new TypeError('Cannot convert undefined or null to object');
+  }
+
+  var output = Object(target);
+  var idx = 1;
+  var length = arguments.length;
+  while (idx < length) {
+    var source = arguments[idx];
+    if (source != null) {
+      for (var nextKey in source) {
+        if (_has(nextKey, source)) {
+          output[nextKey] = source[nextKey];
+        }
+      }
+    }
+    idx += 1;
+  }
+  return output;
+};
 
 
 /***/ })

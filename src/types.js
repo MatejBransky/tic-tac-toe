@@ -6,8 +6,8 @@ const TypesView = ({ data, setType }) => (
     <div className="types__options">
       {data.map((type, idType) =>
         <button key={idType} onclick={() => setType(type)} className="types__item">
-          {type.playersNames.map((player, idPlayer) =>
-            <div key={idPlayer} className="types__player">{ player }</div>
+          {type.players.map((player, idPlayer) =>
+            <div key={idPlayer} className="types__player">{ player.name }</div>
           )}
         </button>
       )}
@@ -15,6 +15,4 @@ const TypesView = ({ data, setType }) => (
   </div>
 )
 
-export {
-  TypesView
-}
+export default TypesView

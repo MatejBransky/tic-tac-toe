@@ -1,26 +1,40 @@
 import { h, app, Router } from 'hyperapp'
 
-import { TypesView } from './types'
-import { MarksView } from './marks'
-// import { GameView, Game } from './game'
+import merge from 'ramda/src/merge'
+import assocPath from 'ramda/src/assocPath'
+import reverse from 'ramda/src/reverse'
+
+import TypesView from './types'
+import MarksView from './marks'
+import GameView from './game'
 
 app({
   state: {
-    typesData: [
+    types: [
       {
-        playersNames: ['Player', 'Player'],
+        players: [
+          { name: 'Player' }, 
+          { name: 'Player' }
+        ],
         ai: false
       },
       {
-        playersNames: ['Player', 'PC'],
+        players: [
+          { name: 'Player' },
+          { name: 'PC' }
+        ],
         ai: true
       }
     ],
-    marksData: [
-      { name: '', mark: 'X' },
-      { name: '', mark: 'O' }
-    ],
-    gameData: {
+
+    marks: {
+      players: [
+        { name: '', mark: 'X' },
+        { name: '', mark: 'O' }
+      ]
+    },
+
+    game: {
       players: [
         { name: '', mark: '', score: 0 },
         { name: '', mark: '', score: 0 }
@@ -32,44 +46,50 @@ app({
   view: {
     '*': (state, actions) =>
       <TypesView
-        data={state.typesData}
+        data={state.types}
         setType={type => {
           actions.setAi(type.ai)
-          actions.setPlayers(type.playersNames)
+          actions.setPlayers(type.players)
           actions.router.go('/marks')
-        }} />,
+        }} 
+      />,
     '/marks': (state, actions) =>
       <MarksView
-        data={state.marksData}
+        data={state.marks}
         switchMarks={actions.switchMarks}
         setMarks={players => {
           actions.setMarks(players)
-          console.log(state.gameData)
-        }} />
+          actions.router.go('/game')
+        }} 
+      />,
+    '/game': (state, actions) =>
+      <GameView data={state.game} />
   },
 
   actions: {
-    setAi: (state, actions, ai) => ({ ai }),
-    setPlayers: (state, actions, playersNames) => ({
-      marksData: [
-        { name: playersNames[0], mark: 'X' },
-        { name: playersNames[1], mark: 'O' }
-      ]
-    }),
-    switchMarks: (state, actions, players) => ({
-      marksData: [
-        { name: players[0].name, mark: players[1].mark },
-        { name: players[1].name, mark: players[0].mark }
-      ]
-    }),
-    setMarks: (state, actions, players) => ({
-      gameData: {
-        players: [
-          { name: players[0].name, mark: players[0].mark, score: state.gameData.players[0].score },
-          { name: players[1].name, mark: players[1].mark, score: state.gameData.players[1].score }
-        ]
+    setAi: (state, actions, ai) => assocPath(['game', 'ai'], ai, state),
+    setPlayers: (state, actions, players) => ({
+      marks: {
+        players: state.marks.players
+          .map((player, index) => merge(player, players[index]))
       }
+    }),
+    switchMarks: (state, actions, players) => {
+      const marks = reverse(state.marks.players.map(player => player.mark))
+      return {
+        marks: {
+          players: state.marks.players
+            .map((player, index) => merge(player, { mark: marks[index] }))
+        }
+      }
+    },
+    setMarks: (state, actions, players) => ({
+      game: { players: merge(state.game.players, players) }
     })
+  },
+
+  events: {
+    update: (state, actions) => console.log(JSON.stringify(state, null, '\t'))
   },
 
   plugins: [Router]
