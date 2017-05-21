@@ -39,12 +39,18 @@ app({
         { name: '', mark: '', score: 0 },
         { name: '', mark: '', score: 0 }
       ],
-      ai: false
+      ai: false,
+      current: 0,
+      board: [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ]
     }
   },
 
   view: {
-    '*': (state, actions) =>
+    '/': (state, actions) =>
       <TypesView
         data={state.types}
         setType={type => {
@@ -63,7 +69,7 @@ app({
           actions.router.go('/game')
         }} 
       />,
-      
+
     '/game': (state, actions) =>
       <GameView data={state.game} />
   },
@@ -93,7 +99,8 @@ app({
   },
 
   events: {
-    update: (s, a, d) => console.log(JSON.stringify(d))
+    loaded: (state, actions) => state.router.match !== '/' && actions.router.go('/'),
+    update: (state, actions, data) => console.log(JSON.stringify(data))
   },
 
   plugins: [ Router ]

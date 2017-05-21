@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack -w",
-    "serve": "browser-sync start --config bs-config.js",
-    "start": "npm run webpack | npm run serve"
+    "start": "npm run webpack"
   },
   "repository": {
     "type": "git",
@@ -38,6 +37,7 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.18.11",
+    "browser-sync-webpack-plugin": "^1.1.4",
     "connect-history-api-fallback": "^1.3.0",
     "ramda": "^0.23.0",
     "webpack": "^2.5.1"

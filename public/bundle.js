@@ -515,12 +515,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     game: {
       players: [{ name: '', mark: '', score: 0 }, { name: '', mark: '', score: 0 }],
-      ai: false
+      ai: false,
+      current: 0,
+      board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     }
   },
 
   view: {
-    '*': function _(state, actions) {
+    '/': function _(state, actions) {
       return (0, _hyperapp.h)(_types2.default, {
         data: state.types,
         setType: function setType(type) {
@@ -582,8 +584,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   },
 
   events: {
-    update: function update(s, a, d) {
-      return console.log(JSON.stringify(d));
+    loaded: function loaded(state, actions) {
+      return state.router.match !== '/' && actions.router.go('/');
+    },
+    update: function update(state, actions, data) {
+      return console.log(JSON.stringify(data));
     }
   },
 
