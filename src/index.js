@@ -53,6 +53,7 @@ app({
           actions.router.go('/marks')
         }} 
       />,
+
     '/marks': (state, actions) =>
       <MarksView
         data={state.marks}
@@ -62,6 +63,7 @@ app({
           actions.router.go('/game')
         }} 
       />,
+      
     '/game': (state, actions) =>
       <GameView data={state.game} />
   },
@@ -74,6 +76,7 @@ app({
           .map((player, index) => merge(player, players[index]))
       }
     }),
+
     switchMarks: (state, actions, players) => {
       const marks = reverse(state.marks.players.map(player => player.mark))
       return {
@@ -86,11 +89,12 @@ app({
     setMarks: (state, actions, players) => ({
       game: { players: merge(state.game.players, players) }
     })
+
   },
 
   events: {
     update: (s, a, d) => console.log(JSON.stringify(d))
   },
 
-  plugins: [Router]
+  plugins: [ Router ]
 })

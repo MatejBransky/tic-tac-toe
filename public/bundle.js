@@ -530,6 +530,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
       });
     },
+
     '/marks': function marks(state, actions) {
       return (0, _hyperapp.h)(_marks2.default, {
         data: state.marks,
@@ -540,6 +541,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
       });
     },
+
     '/game': function game(state, actions) {
       return (0, _hyperapp.h)(_game2.default, { data: state.game });
     }
@@ -558,6 +560,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         }
       };
     },
+
     switchMarks: function switchMarks(state, actions, players) {
       var marks = (0, _reverse2.default)(state.marks.players.map(function (player) {
         return player.mark;
@@ -575,6 +578,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         game: { players: (0, _merge2.default)(state.game.players, players) }
       };
     }
+
   },
 
   events: {
