@@ -578,8 +578,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   },
 
   events: {
-    update: function update(state, actions) {
-      return console.log(JSON.stringify(state, null, '\t'));
+    update: function update(s, a, d) {
+      return console.log(JSON.stringify(d));
     }
   },
 

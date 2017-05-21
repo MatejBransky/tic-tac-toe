@@ -89,7 +89,7 @@ app({
   },
 
   events: {
-    update: (state, actions) => console.log(JSON.stringify(state, null, '\t'))
+    update: (s, a, d) => console.log(JSON.stringify(d))
   },
 
   plugins: [Router]
