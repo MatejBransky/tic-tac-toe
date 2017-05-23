@@ -9,7 +9,7 @@ const MarksView = ({ names, marks, actions }) => (
       </div>
     )}
     <button onclick={actions.switchMarks} className="marks__switch">switch</button>
-    <button onclick={actions.setMarks} className="marks__submit">submit</button>
+    <button onclick={actions.setGame} className="marks__submit">submit</button>
   </div>
 )
 

@@ -14,7 +14,7 @@ const GameView = ({ players, board, actions }) => (
     <div className="game__board">
       {board
         .map((row, y) =>
-          <div className="board__row">
+          <div className="game__row">
             {row.map((field, x) =>
               <div
                 className="game__field"

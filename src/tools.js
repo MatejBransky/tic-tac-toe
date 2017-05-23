@@ -40,7 +40,7 @@ const getUpdates = (prevState, newState) => {
 const printUpdates = (prevState, newState, separator = '/') => {
   const updates = getUpdates(prevState, newState)
     .map(update => merge(update, { path: update.path.join(separator) }))
-  return console.table(updates)
+  console.table(updates)
 }
 
 export {

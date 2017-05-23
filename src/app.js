@@ -11,5 +11,6 @@ app({
   view,
   actions,
   events,
-  plugins
+  plugins,
+  root: document.getElementById('app')
 })
