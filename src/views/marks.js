@@ -1,15 +1,15 @@
 import { h } from 'hyperapp'
 
-const MarksView = ({ data, actions }) => (
+const MarksView = ({ names, marks, actions }) => (
   <div className="marks">
-    {data.players.map((player, index) => 
+    {names.map((name, index) => 
       <div id={index} className="marks__player">
-        <div className="marks__name">{ player.name }</div>
-        <div className="marks__mark">{ player.mark }</div>
+        <div className="marks__name">{ name }</div>
+        <div className="marks__mark">{ marks[index] }</div>
       </div>
     )}
-    <button onclick={() => actions.switchMarks(data)} className="marks__switch">switch</button>
-    <button onclick={() => actions.setMarks(data.players)} className="marks__submit">submit</button>
+    <button onclick={actions.switchMarks} className="marks__switch">switch</button>
+    <button onclick={actions.setMarks} className="marks__submit">submit</button>
   </div>
 )
 

@@ -7,19 +7,21 @@ import GameView from './views/game'
 export default {
   '/': (state, actions) =>
     <TypesView
-      data={state.types}
+      types={state.options.types}
       actions={actions.types}
     />,
 
   '/marks': (state, actions) =>
     <MarksView
-      data={state.marks}
+      names={state.players.map(player => player.name)}
+      marks={state.options.marks}
       actions={actions.marks}
     />,
 
   '/game': (state, actions) =>
     <GameView
-      data={state.game}
+      players={state.players}
+      board={state.board}
       actions={actions.game}
     />
 }

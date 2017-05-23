@@ -1,41 +1,50 @@
-import { Router } from 'hyperapp'
+import { distribute, update } from './tools'
 
-import merge from 'ramda/src/merge'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 
 export default {
   types: {
     setAi: (state, actions, ai) => assocPath(['game', 'ai'], ai, state),
-    setPlayers: (state, actions, players) => ({
-      marks: {
-        players: state.marks.players
-          .map((player, index) => merge(player, players[index]))
-      }
+
+    setNames: (state, actions, names) => distribute({
+      key: 'name',
+      values: names,
+      course: ['players'],
+      parent: state
     }),
+
     setType: (state, actions, type) => {
       actions.types.setAi(type.ai)
-      actions.types.setPlayers(type.players)
+      actions.types.setNames(type.names)
       actions.router.go('/marks')
     }
   },
 
   marks: {
-    switchMarks: (state, actions, players) => {
-      const marks = reverse(state.marks.players.map(player => player.mark))
-      return {
-        marks: {
-          players: state.marks.players
-            .map((player, index) => merge(player, { mark: marks[index] }))
-        }
-      }
-    },
-    setGame: (state, actions, players) => ({
-      game: { players: merge(state.game.players, players) }
+    switchMarks: (state) => assocPath(['options', 'marks'], reverse(state.options.marks), state),
+
+    setMarks: (state) => distribute({
+      key: 'mark',
+      values: state.options.marks,
+      course: ['players'],
+      parent: state
     }),
-    setMarks: (state, actions, players) => {
-      actions.marks.setGame(players)
+
+    setGame: (state, actions) => {
+      actions.marks.setMarks()
       actions.router.go('/game')
     }
+  },
+
+  game: {
+    markField: (state, actions, coord) => update({
+      course: ['board', coord.y, coord.x],
+      value: {
+        value: state.players[state.current].value,
+        mark: state.players[state.current].mark
+      },
+      parent: state
+    })
   }
 }
