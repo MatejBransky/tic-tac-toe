@@ -1,1 +1,148 @@
+html {
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  color: #586e75;
+  background: #fdf6e3;
+  text-align: center;
+}
+
+.box--fixed {
+  height: 250px;
+}
+
+.box__title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  color: #586e75;
+  background: transparent;
+  border: 2px solid #dc322f;
+  cursor: pointer;
+  transition: all 50ms;
+}
+
+.button:hover {
+  color: #073642;
+  background: #eee8d5;
+}
+
+.button__cell {
+  width: 50%;
+}
+
+.marks {
+  display: flex;
+  justify-content: space-between;
+}
+
+.marks__player {
+  width: 40%;
+}
+
+.game__desc {
+  display: flex;
+  justify-content: space-between;
+}
+
+.game__player {
+  width: 40%;
+}
+
+.player__name {
+  margin-bottom: 0.5rem;
+}
+
+.player__mark {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.game__top {
+  width: 200px;
+  margin-bottom: 2rem;
+  background: #eee8d5;
+}
+
+.game__score {
+  display: flex;
+  justify-content: space-between;
+}
+
+.player__score {
+  width: 40%;
+  margin: 1rem 0;
+}
+
+.game__board {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0;
+}
+
+.board__row {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.board__field {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  font-size: 2rem;
+  color: #586e75;
+  background: #eee8d5;
+  border: none;
+  outline: none;
+}
 

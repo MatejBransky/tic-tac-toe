@@ -21,5 +21,5 @@ export default {
   ],
   ai: false,
   current: 0,
-  board: repeat(repeat({ value: 0, mark: '' }, 3), 3)
+  board: repeat(repeat({ value: 0, mark: 'X' }, 3), 3)
 }

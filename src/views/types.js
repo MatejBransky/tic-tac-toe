@@ -1,14 +1,20 @@
 import { h } from 'hyperapp'
-
 const TypesView = ({ types, actions }) => (
-  <div className="types">
-    <h1 className="types__title">Type of game</h1>
-    <div className="types__options">
+  <div className="box box--fixed">
+    <div className="box__top">
+      <h1 className="box__title">Type of game</h1>
+    </div>
+    <div className="box__bottom"> 
       {types.map((type, idType) =>
-        <button className="types__item" key={idType} onclick={() => actions.setType(type)}>
+        <button 
+          className="button"
+          key={idType}
+          onclick={() => actions.setType(type)}>
           {type.names.map((name, idName) =>
-            <div className="types__player" key={idName}>
-              { name }
+            <div 
+              className="button__cell"
+              key={idName}>
+              {name}
             </div>
           )}
         </button>
@@ -16,5 +22,4 @@ const TypesView = ({ types, actions }) => (
     </div>
   </div>
 )
-
 export default TypesView

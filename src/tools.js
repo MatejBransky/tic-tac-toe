@@ -17,9 +17,11 @@ const flatten = (object, separator = '.') => {
   return Object.assign({}, ...function _flatten(child, path = []) {
     return [].concat(...Object
       .keys(child)
-      .map(key => type(child[key]) === 'Object' || type(child[key]) === 'Array'
-        ? _flatten(child[key], path.concat([key]))
-        : ({ [path.concat([key]).join(separator)]: child[key] })
+      .map(key => type(child[key]) === 'Object' || type(child[key]) === 'Array' ?
+        _flatten(child[key], path.concat([key])) :
+        ({
+          [path.concat([key]).join(separator)]: child[key]
+        })
       ))
   }(object))
 }
@@ -28,9 +30,9 @@ const getUpdates = (prevState, newState) => {
   const SEPARATOR = '.'
   const flattenPrev = flatten(prevState, SEPARATOR)
   const flattenNew = flatten(newState, SEPARATOR)
-  return keys(flattenPrev).reduce((updates, key) => equals(flattenPrev[key], flattenNew[key])
-    ? updates
-    : append({
+  return keys(flattenPrev).reduce((updates, key) => equals(flattenPrev[key], flattenNew[key]) ?
+    updates :
+    append({
       path: key.split(SEPARATOR),
       oldValue: flattenPrev[key],
       newValue: flattenNew[key]

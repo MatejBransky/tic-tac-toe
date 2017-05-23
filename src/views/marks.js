@@ -1,15 +1,19 @@
 import { h } from 'hyperapp'
 
 const MarksView = ({ names, marks, actions }) => (
-  <div className="marks">
-    {names.map((name, index) => 
-      <div id={index} className="marks__player">
-        <div className="marks__name">{ name }</div>
-        <div className="marks__mark">{ marks[index] }</div>
-      </div>
-    )}
-    <button onclick={actions.switchMarks} className="marks__switch">switch</button>
-    <button onclick={actions.setGame} className="marks__submit">submit</button>
+  <div className="box box--fixed">
+    <div className="box__top marks">
+      {names.map((name, index) =>
+        <div id={index} className="marks__player">
+          <h1 className="box__title">{name}</h1>
+          <div>{marks[index]}</div>
+        </div>
+      )}
+    </div>
+    <div className="box__bottom">
+      <button onclick={actions.switchMarks} className="button">switch</button>
+      <button onclick={actions.setGame} className="button">submit</button>
+    </div>
   </div>
 )
 
