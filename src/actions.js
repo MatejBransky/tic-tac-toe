@@ -5,7 +5,7 @@ import reverse from 'ramda/src/reverse'
 
 export default {
   types: {
-    setAi: (state, actions, ai) => assocPath(['game', 'ai'], ai, state),
+    setAi: (state, actions, ai) => assocPath(['ai'], ai, state),
 
     setNames: (state, actions, names) => distribute({
       key: 'name',
@@ -14,7 +14,7 @@ export default {
       parent: state
     }),
 
-    setType: (state, actions, type) => {
+    setGame: (state, actions, type) => {
       actions.types.setAi(type.ai)
       actions.types.setNames(type.names)
       actions.router.go('/marks')

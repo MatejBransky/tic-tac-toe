@@ -9,7 +9,7 @@ const TypesView = ({ types, actions }) => (
         <button 
           className="button"
           key={idType}
-          onclick={() => actions.setType(type)}>
+          onclick={() => actions.setGame(type)}>
           {type.names.map((name, idName) =>
             <div 
               className="button__cell"

@@ -3,6 +3,7 @@ import type from 'ramda/src/type'
 import keys from 'ramda/src/keys'
 import equals from 'ramda/src/equals'
 import merge from 'ramda/src/merge'
+import mergeAll from 'ramda/src/mergeAll'
 import assoc from 'ramda/src/assoc'
 import assocPath from 'ramda/src/assocPath'
 import path from 'ramda/src/path'
@@ -14,14 +15,11 @@ const distribute = ({ key, values, course, parent }) => {
 }
 
 const flatten = (object, separator = '.') => {
-  return Object.assign({}, ...function _flatten(child, path = []) {
-    return [].concat(...Object
-      .keys(child)
-      .map(key => type(child[key]) === 'Object' || type(child[key]) === 'Array' ?
-        _flatten(child[key], path.concat([key])) :
-        ({
-          [path.concat([key]).join(separator)]: child[key]
-        })
+  return mergeAll(function _flatten(child, path = []) {
+    return [].concat(...keys(child)
+      .map(key => type(child[key]) === 'Object' || type(child[key]) === 'Array' ? 
+        _flatten(child[key], append(key, path)) : 
+        ({ [append(key, path).join(separator)]: child[key] })
       ))
   }(object))
 }
