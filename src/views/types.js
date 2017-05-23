@@ -1,4 +1,5 @@
 import { h } from 'hyperapp'
+
 const TypesView = ({ types, actions }) => (
   <div className="box box--fixed">
     <div className="box__top">

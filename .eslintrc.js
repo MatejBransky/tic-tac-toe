@@ -14,6 +14,12 @@ module.exports = {
     "plugins": [
         "react"
     ],
+    "settings": {
+      "react": {
+        "createClass": "h", // Regex for Component Factory to use, default to "createReactClass"
+        "pragma": "h",  // Pragma to use, default to "React"
+      }
+    },
     "rules": {
         "indent": [
             "error",
@@ -32,6 +38,8 @@ module.exports = {
             "never"
         ],
         "no-console": ["warn"],
-        "no-unused-vars": ["warn"]
+        // "no-unused-vars": ["warn"],
+        "react/jsx-uses-react": [1],
+        "react/jsx-uses-vars": [2]
     }
 };
