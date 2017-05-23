@@ -1,2 +1,4 @@
 node_modules
-Thumbs.db
+
+public/bundle.js
+public/bundle.js.map
