@@ -1,38 +1,39 @@
 import { h } from 'hyperapp'
 
 const GameView = ({ players, board, actions }) => (
-  <div className="box game">
-    <div className="box__top game__top">
-      <div className="box__top game__desc">
+  <div>
+    <div className="status">
+      <div className="status__players">
         {players.map(player =>
-          <div className="game__player">
-            <div className="box__title player__name">{player.name}</div>
-            <div className="player__mark">{player.mark}</div>
+          <div className="status__player">
+            <h1>{player.name}</h1>
+            <p><strong>{player.mark}</strong></p>
           </div>
         )}
       </div>
-      <div className="game__score">
+      <div className="status__scores">
         {players.map(player =>
-          <div className="player__score">{player.score}</div>
+          <p className="status__score">{player.score}</p>
         )}
       </div>
     </div>
-    <div className="box__middle game__board">
+    <div className="board">
       {board
         .map((row, y) =>
-          <div className="board__row">
+          <div key={y} className="board__row">
             {row.map((field, x) =>
               <button
+                key={x}
                 className="board__field"
-                onclick={() => actions.markField({ x, y, obj: { value: 1, mark: 'X' } })}>
+                onclick={() => actions.markField({ x, y })}>
                 {field.mark}
               </button>
             )}
           </div>
         )}
     </div>
-    <div className="box__bottom game__settings">
-      <button className="button game__button">Restart</button>
+    <div className="settings">
+      <button>Restart</button>
     </div>
   </div>
 )

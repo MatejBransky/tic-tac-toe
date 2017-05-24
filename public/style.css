@@ -1,7 +1,8 @@
 html {
   box-sizing: border-box;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
+  font-size: 16px;
+  color: rgb(80, 80, 80);
 }
 
 *,
@@ -11,138 +12,152 @@ html {
 }
 
 html,
-body,
-#app {
+body {
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
 }
 
+h1 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  box-sizing: border-box;
+  padding: 5px 10px;
+  margin: 5px 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  color: rgb(70,70,70);
+  background: rgba(250,250,250,0.8);
+  border: 2px solid grey;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+button:hover {
+  border-color: grey;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
 #app {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .box {
-  width: 220px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-  color: #586e75;
-  background: #fdf6e3;
+  width: 300px;
+  padding: 20px;
   text-align: center;
+  box-shadow: 0 0 150px 0 rgb(200,200,200);
 }
 
-.box--fixed {
-  height: 170px;
-}
-
-.box__title {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.button {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  padding: 0.5rem 0;
-  margin-top: 0.5rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 600;
-  color: #586e75;
-  background: transparent;
-  border: 2px solid #dc322f;
-  cursor: pointer;
-  transition: all 50ms;
-}
-
-.button:hover {
-  color: #073642;
-  background: #eee8d5;
-}
-
-.button__cell {
-  width: 50%;
-}
-
-.marks {
-  display: flex;
-  justify-content: space-between;
-}
-
-.marks__player {
-  width: 40%;
-}
-
-.game__desc {
-  display: flex;
-  justify-content: space-between;
-}
-
-.game__player {
-  width: 40%;
-}
-
-.player__name {
-  margin-bottom: 0.5rem;
-}
-
-.player__mark {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.game__top {
-  width: 200px;
-  margin-bottom: 2rem;
-  background: #eee8d5;
-}
-
-.game__score {
-  display: flex;
-  justify-content: space-between;
-}
-
-.player__score {
-  width: 40%;
-  margin: 1rem 0;
-}
-
-.game__board {
-  width: 200px;
-  height: 200px;
+.options {
   display: flex;
   flex-direction: column;
+}
+
+.options__button {
+  display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  font-size: 0;
+}
+
+.options__button::after {
+  content: ' vs ';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.options__player {
+  position: relative;
+}
+
+.status {
+  margin: 10px 0;
+  border-bottom: 2px solid rgb(250,250,250);
+}
+
+.status__players {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  background: rgb(250,250,250)
+}
+
+.status__player {
+  position: relative;
+  flex: 1 1 50%;
+}
+
+.status__player:first-child::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -10%;
+  display: block;
+  width: 1px;
+  height: 120%;
+  background: rgb(254, 254, 254);
+}
+
+.status__scores {
+  display: flex;
+  margin: 10px 0;
+}
+
+.status__score {
+  flex: 1 1 50%;
 }
 
 .board__row {
-  height: 60px;
   display: flex;
-  justify-content: space-between;
-  flex-shrink: 0;
-  margin: 0;
+  justify-content: center;
 }
 
 .board__field {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   margin: 0;
-  font-size: 2rem;
-  color: #586e75;
-  background: #eee8d5;
-  border: none;
-  outline: none;
+  border: 1px solid rgb(100,100,100);
 }
 
+.board__field:hover {
+  border-color: rgb(100,100,100);
+}
+
+.board__row:first-child .board__field {
+  border-top: 0;
+}
+
+.board__row:last-child .board__field {
+  border-bottom: 0;
+}
+
+.board__field:first-child {
+  border-left: 0;
+}
+
+.board__field:last-child {
+  border-right: 0;
+}
+
+.settings {
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 2px solid rgb(250,250,250);
+}

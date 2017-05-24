@@ -8,7 +8,7 @@ export default {
         ai: false
       },
       {
-        names: [ 'Player', 'PC' ],
+        names: [ 'Player', 'Computer' ],
         ai: true
       }
     ],
@@ -16,10 +16,10 @@ export default {
   },
 
   players: [
-    { name: '', mark: '', score: 0, value: 7 },
-    { name: '', mark: '', score: 0, value: 1 }
+    { name: 'Player', mark: 'X', score: 0, value: 7 },
+    { name: 'Player', mark: 'O', score: 0, value: 1 }
   ],
   ai: false,
   current: 0,
-  board: repeat(repeat({ value: 0, mark: 'X' }, 3), 3)
+  board: repeat(repeat({ value: 0, mark: '' }, 3), 3)
 }

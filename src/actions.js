@@ -1,4 +1,4 @@
-import { distribute, update } from './tools'
+import { distribute } from './tools'
 
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
@@ -38,13 +38,13 @@ export default {
   },
 
   game: {
-    markField: (state, actions, coord) => update({
-      course: ['board', coord.y, coord.x],
-      value: {
+    markField: (state, actions, coord) => assocPath(
+      ['board', coord.y, coord.x],
+      {
         value: state.players[state.current].value,
         mark: state.players[state.current].mark
       },
-      parent: state
-    })
+      state
+    )
   }
 }
