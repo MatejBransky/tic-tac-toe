@@ -25,7 +25,7 @@ const GameView = ({ players, board, actions }) => (
               <button
                 key={x}
                 className="board__field"
-                onclick={() => actions.markField({ x, y })}>
+                onclick={() => actions.process({ x, y })}>
                 {field.mark}
               </button>
             )}

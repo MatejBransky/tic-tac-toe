@@ -28,7 +28,7 @@ const getUpdates = (prevState, newState) => {
   const SEPARATOR = '.'
   const flattenPrev = flatten(prevState, SEPARATOR)
   const flattenNew = flatten(newState, SEPARATOR)
-  return keys(flattenPrev).reduce((updates, key) => equals(flattenPrev[key], flattenNew[key]) ?
+  return keys(flattenNew).reduce((updates, key) => equals(flattenPrev[key], flattenNew[key]) ?
     updates :
     append({
       path: key.split(SEPARATOR),

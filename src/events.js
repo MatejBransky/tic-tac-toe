@@ -4,9 +4,5 @@ import keys from 'ramda/src/keys'
 
 export default {
   // loaded: (state, actions) => state.router.match !== '/' && actions.router.go('/'),
-  update: (prevState, actions, data) => {
-    if (equals(keys(prevState), keys(data))) {
-      printUpdates(prevState, data)
-    }
-  }
+  update: (prevState, actions, data) => printUpdates(prevState, data)
 }
