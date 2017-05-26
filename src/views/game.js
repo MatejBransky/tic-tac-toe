@@ -18,19 +18,18 @@ const GameView = ({ players, board, actions }) => (
       </div>
     </div>
     <div className="board">
-      {board
-        .map((row, y) =>
-          <div key={y} className="board__row">
-            {row.map((field, x) =>
-              <button
-                key={x}
-                className="board__field"
-                onclick={() => actions.process({ x, y })}>
-                {field.mark}
-              </button>
-            )}
-          </div>
-        )}
+      {board.map((row, y) =>
+        <div key={y} className="board__row">
+          {row.map((field, x) =>
+            <button
+              key={x}
+              className="board__field"
+              onclick={() => actions.process({ x, y })}>
+              {field.mark}
+            </button>
+          )}
+        </div>
+      )}
     </div>
     <div className="settings">
       <button>Restart</button>

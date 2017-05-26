@@ -5,7 +5,7 @@ import times from 'ramda/src/times'
 import keys from 'ramda/src/keys'
 
 const processGame = (state, actions, coord) => {
-  actions.game.setField(coord)
+  actions.game.setField(coord) // separate from this action
 
   const { board } = setField(state, coord)
   
