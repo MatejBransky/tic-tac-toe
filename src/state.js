@@ -21,9 +21,5 @@ export default {
   ],
   ai: false,
   current: 0,
-  board: repeat(repeat({ mark: '', value: 1, win: false }, 3), 3),
-  messages: {
-    win: { player: '', text: 'is winner!', show: false },
-    draw: { text: 'It\'s a draw!', show: false }
-  }
+  board: repeat(repeat({ mark: '', value: 1, win: false }, 3), 3)
 }
