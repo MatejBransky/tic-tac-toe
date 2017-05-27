@@ -1,4 +1,4 @@
-import repeat from 'ramda/src/repeat'
+import times from 'ramda/src/times'
 
 export default {
   options: {
@@ -21,5 +21,11 @@ export default {
   ],
   ai: false,
   current: 0,
-  board: repeat(repeat({ mark: '', value: 1, win: false }, 3), 3)
+  board: times(y => times(x => ({
+    x,
+    y,
+    mark: '', 
+    value: 1, 
+    win: false 
+  }), 3), 3)
 }

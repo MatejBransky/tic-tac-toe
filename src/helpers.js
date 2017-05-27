@@ -15,14 +15,16 @@ const checkWinSeries = (board) => {
     columns: transpose(board),
     diagonals: [
       times(i => board[i][i], 3),
-      times(i => board[3 - i][3 - i], 3)
+      times(i => board[2 - i][2 - i], 3)
     ]
   }
-  keys(series).map(serie => checkWinSerie(serie)) // number of fields in serie
-  // @TODO
+  return keys(series).filter(serie => checkWinSerie(serie))
 }
 
-const checkWinSerie = (serie) => serie.every((field) => field.mark === serie[0].mark)
+const checkWinSerie = (serie) => 
+  serie[0].mark !== '' &&
+  serie[0].mark === serie[1].mark && 
+  serie[1].mark === serie[2].mark
 
 const getAiMove = ({ board, players }) => {
   // @TODO
