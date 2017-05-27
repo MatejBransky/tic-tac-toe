@@ -1,10 +1,6 @@
 import { distribute } from './tools'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
-import concat from 'ramda/src/concat'
-import transpose from 'ramda/src/transpose'
-import times from 'ramda/src/times'
-import keys from 'ramda/src/keys'
 
 export default {
   types: {
@@ -102,27 +98,4 @@ export default {
       // @TODO
     }
   }
-}
-
-function isDraw(board) {
-  const fieldsMarks = board.reduce((marks, row) =>
-    concat(marks, row.map(field => field.mark)), [])
-  return !fieldsMarks.includes('')
-}
-
-function checkWinSeries(board) {
-  const series = {
-    rows: board,
-    columns: transpose(board),
-    diagonals: [
-      times(i => board[i][i], 3),
-      times(i => board[3 - i][3 - i], 3)
-    ]
-  }
-  keys(series).map(serie => checkSerie(serie)) // number of fields in serie
-  // @TODO
-}
-
-function getAiMove({ board, players }) {
-  // @TODO
 }
