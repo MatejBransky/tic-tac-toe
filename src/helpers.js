@@ -9,7 +9,7 @@ const isDraw = (board) => {
   return !fieldsMarks.includes('')
 }
 
-const checkWinSeries = (board) => {
+const getWinSeries = (board) => {
   const series = {
     rows: board,
     columns: transpose(board),
@@ -33,6 +33,6 @@ const getAiMove = ({ board, players }) => {
 export {
   isDraw,
   checkWinSerie,
-  checkWinSeries,
+  getWinSeries,
   getAiMove
 }
