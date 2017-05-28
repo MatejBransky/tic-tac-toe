@@ -39,14 +39,14 @@ tic-tac-toe
 │   ├── helpers.test.js
 │   └── actions.test.js
 ├── src                     // Folder with unbundled source JavaScript files
-│   ├── app.js              // Main JS file with connecting other parts of app
-│   ├── state.js            // State of app
-│   ├── view.js             // View of app
-│   ├── actions.js          // Actions of app
-│   ├── events.js           // Events of app
-│   ├── plugins.js          // Plugins of app
-│   ├── utils.js            // Functions for better dev
-│   └── helpers.js          // Functions for helping to complete actions
+│   ├── app.js                // Main JS file with connecting other parts of app
+│   ├── state.js              // State of app
+│   ├── view.js               // View of app
+│   ├── actions.js            // Actions of app
+│   ├── events.js             // Events of app
+│   ├── plugins.js            // Plugins of app
+│   ├── utils.js              // Functions for better dev
+│   └── helpers.js            // Functions for helping to complete actions
 ├── public                  // Output folder with index.html, style.css and bundle.js
 │   ├── index.html
 │   ├── style.css
