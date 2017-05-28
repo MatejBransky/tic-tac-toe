@@ -1,18 +1,24 @@
 # Readme Driven Development (RDD)
 
-## Utils
-
+## Utils - everything around the app
 ```javascript
 // Create object 'field'
-const field = createField('X') // { x:  } // @TODO
+const field = createField('X', 0, 1) // => { x: 0, y: 1, mark: 'X', ... }
+
 // Create row which contain objects 'field' with predefined properties
-const row = createRow([], ) // @TODO
+const row = createRow([_, O, X], 1) // => 
+// [
+//   { x: 0, y: 1, mark: '', ... },
+//   { x: 1, y: 1, mark: 'O', ... },
+//   { x: 2, y: 1, mark: 'X', ... }
+// ]
+
 // Create board with rows which contain objects 'field' with predefined properties
 const board = createBoard([
   ['_', 'O', 'X'],
   ['_', 'X', '_'],
   ['_', 'O', '_']
-])
+]) // =>
 // [
 //   [
 //     { x: 0, y: 0, mark: '', ... },
@@ -30,5 +36,12 @@ const board = createBoard([
 //     { x: 2, y: 2, mark: '', ... }
 //   ]
 // ]
+
 const serie = createSerie({}) // @TODO
+```
+
+
+## Helpers - functions for helping to complete actions
+```javascript
+
 ```

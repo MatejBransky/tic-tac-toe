@@ -1,4 +1,4 @@
-import { distribute } from './tools'
+import { distribute } from './utils'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 

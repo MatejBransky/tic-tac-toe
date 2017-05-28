@@ -1,4 +1,4 @@
-import { printUpdates } from './tools'
+import { printUpdates } from './utils'
 
 export default {
   // loaded: (state, actions) => state.router.match !== '/' && actions.router.go('/'),
