@@ -43,6 +43,11 @@ const setup = () => ({
       ['O', 'O', 'X'],
       ['O', 'X', 'O'],
       ['X', 'O', 'X']
+    ]),
+    twoWinSeries: b([
+      ['O', 'O', 'X'],
+      ['O', 'X', 'X'],
+      ['X', 'O', 'X']
     ])
   }
 })
@@ -69,20 +74,33 @@ test('getWinSeries() should return array of win series (no win => empty array)',
   assert.deepEqual(getWinSeries(board.nonEmpty), [], 'Partially filled board')
   assert.deepEqual(getWinSeries(board.full), [], 'Full board but no winner')
 
-  assert.deepEqual(getWinSeries(
-    board.fullWinHorizontal),
-    r(['O', 'O', 'O'], 0),
-    'Horizontal winning serie')
+  assert.deepEqual(
+    getWinSeries(board.fullWinHorizontal),
+    [r(['O', 'O', 'O'], 0)],
+    'Horizontal winning serie'
+  )
 
-  assert.deepEqual(getWinSeries(
-    board.fullWinVertical),
-    c(['X', 'X', 'X'], 2),
-    'Vertical winning serie')
+  assert.deepEqual(
+    getWinSeries(board.fullWinVertical),
+    [c(['X', 'X', 'X'], 2)],
+    'Vertical winning serie'
+  )
 
-  assert.deepEqual(getWinSeries(
-    board.fullWinDiagonal),
-    d(['X', 'X', 'X'], 'topRight'),
-    'Diagonal winning serie')
+  assert.deepEqual(
+    getWinSeries(board.fullWinDiagonal),
+    [d(['X', 'X', 'X'], 'topRight')],
+    'Diagonal winning serie'
+  )
+
+  assert.deepEqual(
+    getWinSeries(board.twoWinSeries),
+    [
+      c(['X', 'X', 'X'], 2),
+      d(['X', 'X', 'X'], 'topRight')
+    ],
+    'Diagonal and vertical winning series'
+  )
+
   assert.end()
 })
 

@@ -1,4 +1,16 @@
-import { distribute } from './utils'
+import {
+  createBoard,
+  distribute
+} from './utils'
+import {
+  isFull,
+  getWinSeries,
+  getAiMove
+} from './helpers'
+import flatten from 'ramda/src/flatten'
+import lensPath from 'ramda/src/lensPath'
+import view from 'ramda/src/view'
+import set from 'ramda/src/set'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 
@@ -39,7 +51,18 @@ export default {
   game: {
     process: (state, actions, coord) => {
       actions.game.setField(coord)
-      actions.game.checkAndContinue()
+
+      if (isFull(state.board)) {
+        const winSeries = getWinSeries(state.board)
+        if (winSeries.length > 0) {
+          actions.game.win(winSeries)
+        } else {
+          actions.game.draw()
+        }
+      } else {
+        actions.game.setCurrent()
+        actions.game.processAi()
+      }
     },
 
     setField: (state, actions, coord) => assocPath(
@@ -51,51 +74,56 @@ export default {
       state
     ),
 
-    checkAndContinue: (state, actions) => {
-      if (isDraw(state.board)) {
-        actions.game.showMessage('DRAW')
-        actions.game.startNewMatch() // clear board
-        return
-      }
-      const winSeries = checkWinSeries(state.board)
-      if (winSeries) {
-        actions.game.showWinSeries(winSeries)
-        actions.game.showMessage('WIN')
-        actions.game.setScore()
-        actions.game.startNewMatch() // clear board
-        return
-      }
-      actions.game.setCurrent()
-      actions.game.processAi()
+    win: (state, actions, winSeries) => {
+      actions.game.showWinSeries(winSeries)
+      actions.game.showMessage('win')
+      actions.game.increaseScore()
+      actions.game.startNewMatch() // clear board
+    },
+
+    draw: (state, actions) => {
+      actions.game.showMessage('draw')
+      actions.game.startNewMatch() // clear board
     },
 
     showMessage: (state, actions, msg) => {
-      // @TODO
+      const player = state.players[state.current].name
+      const message = {
+        win: `${player} wins!`,
+        draw: 'It\'s a draw'
+      }
+      return { message: message[msg] }
     },
 
-    startNewMatch: (state, actions) => {
-      // @TODO
-    },
+    startNewMatch: () => ({
+      board: createBoard([
+        ['_', '_', '_'],
+        ['_', '_', '_'],
+        ['_', '_', '_']
+      ])
+    }),
 
-    showWinSeries: (state, actions, winSeries) => {
-      // @TODO
-    },
+    showWinSeries: (state, actions, winSeries) =>
+      flatten(winSeries).reduce((board, field) =>
+        assocPath(['board', field.y, field.x, 'win'], true, board), state),
 
-    setScore: (state, actions) => {
-      // @TODO
+    increaseScore: (state) => {
+      const score = lensPath('players', state.current, 'score')
+      const value = view(score, state) + 1
+      return set(score, value, state)
     },
 
     setCurrent: (state) => state.current ? { current: 0 } : { current: 1 },
 
     processAi: (state, actions) => {
-      if (state.current && state.ai) {
+      if (state.ai && state.current) { // PC is always player n°1
         const aiCoord = getAiMove(state)
-        actions.process(aiCoord)
+        actions.game.process(aiCoord)
       }
     },
 
     restart: (state, actions) => {
-      // @TODO
+      actions.game.startNewMatch()
     }
   }
 }

@@ -18,8 +18,7 @@ const getWinSeries = (board) => {
     columns: getColumns(board),
     diagonals: getDiagonals(board)
   }
-  return unnest(keys(series).map(key =>
-    unnest(series[key].filter(serie => checkWinSerie(serie)))))
+  return unnest(keys(series).map(key => series[key].filter(serie => checkWinSerie(serie))))
 }
 
 const checkWinSerie = (serie) =>

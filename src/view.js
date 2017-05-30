@@ -40,7 +40,8 @@ export default {
     </Box>,
 
   '/game': (state, actions) =>
-    <Box>
+    <Box >
+      {state.message && <div>state.message</div>}
       <div>
         <div className="status">
           <div className="status__players">
@@ -75,7 +76,7 @@ export default {
           <button>Restart</button>
         </div>
       </div>
-    </Box>
+    </Box >
 }
 
 const Box = (props, children) =>

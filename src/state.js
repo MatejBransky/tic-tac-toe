@@ -24,8 +24,9 @@ export default {
   board: times(y => times(x => ({
     x,
     y,
-    mark: '', 
-    value: 1, 
-    win: false 
-  }), 3), 3)
+    mark: '',
+    value: 1,
+    win: false
+  }), 3), 3),
+  message: ''
 }
