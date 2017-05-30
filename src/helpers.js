@@ -1,9 +1,12 @@
 import concat from 'ramda/src/concat'
-import times from 'ramda/src/times'
-import transpose from 'ramda/src/transpose'
+import unnest from 'ramda/src/unnest'
 import keys from 'ramda/src/keys'
+import {
+  getColumns,
+  getDiagonals
+} from './utils'
 
-const isDraw = (board) => {
+const isFull = (board) => {
   const fieldsMarks = board.reduce((marks, row) =>
     concat(marks, row.map(field => field.mark)), [])
   return !fieldsMarks.includes('')
@@ -12,18 +15,16 @@ const isDraw = (board) => {
 const getWinSeries = (board) => {
   const series = {
     rows: board,
-    columns: transpose(board),
-    diagonals: [
-      times(i => board[i][i], 3),
-      times(i => board[2 - i][2 - i], 3)
-    ]
+    columns: getColumns(board),
+    diagonals: getDiagonals(board)
   }
-  return keys(series).filter(serie => checkWinSerie(serie))
+  return unnest(keys(series).map(key =>
+    unnest(series[key].filter(serie => checkWinSerie(serie)))))
 }
 
-const checkWinSerie = (serie) => 
+const checkWinSerie = (serie) =>
   serie[0].mark !== '' &&
-  serie[0].mark === serie[1].mark && 
+  serie[0].mark === serie[1].mark &&
   serie[1].mark === serie[2].mark
 
 const getAiMove = ({ board, players }) => {
@@ -31,7 +32,7 @@ const getAiMove = ({ board, players }) => {
 }
 
 export {
-  isDraw,
+  isFull,
   checkWinSerie,
   getWinSeries,
   getAiMove

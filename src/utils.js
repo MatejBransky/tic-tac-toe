@@ -2,6 +2,8 @@ import test from 'tape'
 import append from 'ramda/src/append'
 import type from 'ramda/src/type'
 import keys from 'ramda/src/keys'
+import transpose from 'ramda/src/transpose'
+import times from 'ramda/src/times'
 import equals from 'ramda/src/equals'
 import merge from 'ramda/src/merge'
 import mergeAll from 'ramda/src/mergeAll'
@@ -38,7 +40,6 @@ const tests = method => {
  * @param {Object} test Object with description of test and array of assertions
  */
 const deepEqualTests = test => tests('deepEqual')(test)
-const equalTests = tests('equal')
 
 /**
  * Returns field object with predefined properties
@@ -57,10 +58,17 @@ const createField = (mark, x, y) => {
 
 /**
  * Returns array of field objects
- * @param {Array} row Array with marks (e.g. ["_", "X", "O"])
+ * @param {Array} marks Array with marks (e.g. ["_", "X", "O"])
  * @param {Number} y Number of row in board (0..2)
  */
-const createRow = (row, y) => row.map((mark, x) => createField(mark, x, y))
+const createRow = (marks, y) => marks.map((mark, x) => createField(mark, x, y))
+
+/**
+ * Returns array of field objects
+ * @param {Array} marks Array with marks (e.g. ["_", "X", "O"])
+ * @param {Number} x Number of column in board (0..2)
+ */
+const createColumn = (marks, x) => marks.map((mark, y) => createField(mark, x, y))
 
 /**
  * Returns array with rows which contains field objects
@@ -73,6 +81,25 @@ const createBoard = (board) => board.map((row, y) => createRow(row, y))
  * @param {Array} serie Array of arrays which contains [x, y, mark]
  */
 const createSerie = (serie) => serie.map(([x, y, mark]) => createField(mark, x, y))
+
+/**
+ * Returns array of field objects
+ * @param {Array} marks Array with marks (e.g. ["_", "X", "O"])
+ * @param {String} type Name of diagonal ('topRight' or 'topLeft')
+ */
+const createDiagonal = (marks, type) => {
+  const types = {
+    topRight: marks => createSerie(marks.map((mark, i) => [2 - i, i, mark])),
+    topLeft: marks => createSerie(marks.map((mark, i) => [i, i, mark])),
+  }
+  return types[type](marks)
+}
+
+const getColumns = board => transpose(board)
+const getDiagonals = board => [
+  times(i => board[i][i], 3),
+  times(i => board[i][2-i], 3)
+]
 
 /**
  * Returns object (parent) with changed values (values) in key (key) 
@@ -131,12 +158,15 @@ const printUpdates = (prevState, newState, separator = '/') => {
 }
 
 export {
-  equalTests,
   deepEqualTests,
   createField,
   createRow,
+  createColumn,
   createBoard,
   createSerie,
+  createDiagonal,
+  getColumns,
+  getDiagonals,
   distribute,
   flatten,
   getUpdates,

@@ -37,7 +37,14 @@ const board = createBoard([
 //   ]
 // ]
 
-const serie = createSerie({}) // @TODO
+// Create array with field objects
+const serie = createSerie([[0,0,'X'], [1,1,'X'], [2,2,'O']])
+// =>
+// [
+//   { x: 0, y: 0, mark: 'X', ... },
+//   { x: 1, y: 1, mark: 'X', ... },
+//   { x: 2, y: 2, mark: 'O', ... }
+// ]
 ```
 
 
