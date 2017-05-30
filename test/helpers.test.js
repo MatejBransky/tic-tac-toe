@@ -3,7 +3,8 @@ import {
   createRow as r,
   createColumn as c,
   createBoard as b,
-  createDiagonal as d
+  createDiagonal as d,
+  deepEqualTests
 } from '../src/utils'
 import {
   isFull,
@@ -11,8 +12,10 @@ import {
   getWinSeries,
   getAiMove
 } from '../src/helpers'
+import state from '../src/state'
 
 const setup = () => ({
+  state,
   board: {
     empty: b([
       ['_', '_', '_'],
@@ -103,6 +106,20 @@ test('getWinSeries() should return array of win series (no win => empty array)',
 
   assert.end()
 })
+
+{
+  const state = setup().state
+  deepEqualTests({
+    desc: '',
+    assertions: [
+      {
+        actual: getAiMove(state),
+        expected: b,
+        msg: ''
+      }
+    ]
+  })
+}
 
 // test('Get next move coord of AI', assert => {
 //   // @TODO

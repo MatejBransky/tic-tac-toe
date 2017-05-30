@@ -16,8 +16,8 @@ export default {
   },
 
   players: [
-    { name: 'Player', mark: 'X', value: 7, score: 0 },
-    { name: 'Player', mark: 'O', value: -6, score: 0 }
+    { name: 'Player', mark: 'X', score: 0 },
+    { name: 'Player', mark: 'O', score: 0 }
   ],
   ai: false,
   current: 0,
@@ -25,7 +25,6 @@ export default {
     x,
     y,
     mark: '',
-    value: 1,
     win: false
   }), 3), 3),
   message: ''

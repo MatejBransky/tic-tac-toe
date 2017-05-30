@@ -107,8 +107,18 @@ const getColumns = board => transpose(board)
  */
 const getDiagonals = board => [
   times(i => board[i][i], 3),
-  times(i => board[i][2-i], 3)
+  times(i => board[i][2 - i], 3)
 ]
+
+/**
+ * Returns object of series { rows: [..], columns: [..], diagonals: [..] }
+ * @param {Array} board Board with rows
+ */
+const getSeries = board => ({
+  rows: board,
+  columns: getColumns(board),
+  diagonals: getDiagonals(board)
+})
 
 /**
  * Returns object (parent) with changed values (values) in key (key) 
@@ -176,6 +186,7 @@ export {
   createDiagonal,
   getColumns,
   getDiagonals,
+  getSeries,
   distribute,
   flatten,
   getUpdates,

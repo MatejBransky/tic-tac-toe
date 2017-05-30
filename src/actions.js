@@ -1,5 +1,5 @@
 import {
-  createBoard,
+  createField,
   distribute
 } from './utils'
 import {
@@ -11,6 +11,7 @@ import flatten from 'ramda/src/flatten'
 import lensPath from 'ramda/src/lensPath'
 import view from 'ramda/src/view'
 import set from 'ramda/src/set'
+import times from 'ramda/src/times'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 
@@ -33,7 +34,11 @@ export default {
   },
 
   marks: {
-    switchMarks: (state) => assocPath(['options', 'marks'], reverse(state.options.marks), state),
+    switchMarks: (state) => assocPath(
+      ['options', 'marks'],
+      reverse(state.options.marks),
+      state
+    ),
 
     setMarks: (state) => distribute({
       key: 'mark',
@@ -66,11 +71,8 @@ export default {
     },
 
     setField: (state, actions, coord) => assocPath(
-      ['board', coord.y, coord.x],
-      {
-        value: state.players[state.current].value,
-        mark: state.players[state.current].mark
-      },
+      ['board', coord.y, coord.x, 'mark'],
+      state.players[state.current].mark,
       state
     ),
 
@@ -96,11 +98,7 @@ export default {
     },
 
     startNewMatch: () => ({
-      board: createBoard([
-        ['_', '_', '_'],
-        ['_', '_', '_'],
-        ['_', '_', '_']
-      ])
+      board: times(y => times(x => createField('_', x, y), 3), 3)
     }),
 
     showWinSeries: (state, actions, winSeries) =>
@@ -108,7 +106,7 @@ export default {
         assocPath(['board', field.y, field.x, 'win'], true, board), state),
 
     increaseScore: (state) => {
-      const score = lensPath('players', state.current, 'score')
+      const score = lensPath(['players', state.current, 'score'])
       const value = view(score, state) + 1
       return set(score, value, state)
     },

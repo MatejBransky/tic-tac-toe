@@ -40,10 +40,31 @@ test('types.setNames() should update names of players in state', assert => {
 })
 
 test('marks.setMarks() should update marks in settings', assert => {
+  const state = setup()
+  const expected = pipe(
+    assocPath(['players', 0, 'mark'], state.options.marks[0]),
+    assocPath(['players', 1, 'mark'], state.options.marks[1])
+  )(state)
+  assert.deepEqual(
+    actions.marks.setMarks(state),
+    expected,
+    'Marks appended to players'
+  )
   assert.end()
 })
 
 test('game.setField() should update field in board', assert => {
+  const state = setup()
+  const expected = assocPath(
+    ['board', 0, 0, 'mark'],
+    state.players[state.current].mark,
+    state
+  )
+  assert.deepEqual(
+    actions.game.setField(state, actions, { x: 0, y: 0 }),
+    expected,
+    'Mark field [0,0]'
+  )
   assert.end()
 })
 
@@ -112,9 +133,19 @@ test('game.startNewMatch() should clear the board', assert => {
 })
 
 test('game.increaseScore() should update score', assert => {
-  
-})
-
-test('game.win() should update ', assert => {
+  const state = setup()
+  const expected = merge(state, {
+    players: [
+      { name: 'Player', mark: 'X', score: 1 },
+      { name: 'Player', mark: 'O', score: 0 }
+    ]
+  })
+  assert.deepEqual(
+    actions.game.increaseScore(state),
+    expected,
+    'Score increased'
+  )
   assert.end()
 })
+
+
