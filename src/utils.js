@@ -95,7 +95,16 @@ const createDiagonal = (marks, type) => {
   return types[type](marks)
 }
 
+/**
+ * Returns array of columns from board
+ * @param {Array} board Board with rows
+ */
 const getColumns = board => transpose(board)
+
+/**
+ * Returns array of two diagonals from board
+ * @param {Array} board Board with rows
+ */
 const getDiagonals = board => [
   times(i => board[i][i], 3),
   times(i => board[i][2-i], 3)

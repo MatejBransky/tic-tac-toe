@@ -7,7 +7,6 @@ import {
   createDiagonal,
   createBoard,
   createSerie,
-  getColumns,
   getDiagonals,
   distribute,
   flatten,
