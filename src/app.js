@@ -7,7 +7,7 @@ import events from './events'
 import plugins from './plugins'
 
 import { createBoard as b, getSeries } from './utils'
-import { appendToField, evalFieldsInSeries } from './helpers'
+import { appendToField, evalFieldsInSeries, evalFieldsInBoard, getBestField } from './helpers'
 import pipe from 'ramda/src/pipe'
 const markValues = {
   '': 1, // empty field
@@ -16,15 +16,16 @@ const markValues = {
 }
 const board = b([
   ['_', 'O', 'X'],
-  ['_', '_', 'X'],
+  ['_', 'O', '_'],
   ['_', '_', '_']
 ])
 const series = pipe(
   appendToField(markValues),
-  getSeries
+  getSeries,
+  evalFieldsInSeries,
+  evalFieldsInBoard
 )(board)
-console.log(series)
-console.log(evalFieldsInSeries(series))
+console.table(series.map(serie => serie.map(field => field.eval)))
 
 app({
   state,

@@ -2,6 +2,9 @@ import concat from 'ramda/src/concat'
 import unnest from 'ramda/src/unnest'
 import keys from 'ramda/src/keys'
 import merge from 'ramda/src/merge'
+import flatten from 'ramda/src/flatten'
+import times from 'ramda/src/times'
+import assocPath from 'ramda/src/assocPath'
 import sum from 'ramda/src/sum'
 import pipe from 'ramda/src/pipe'
 import { getSeries } from './utils'
@@ -25,14 +28,31 @@ const checkWinSerie = (serie) =>
 const appendToField = (markValues) => (board) => board
   .map(row => row.map(field => merge(field, { value: markValues[field.mark] })))
 
-// series: Object => Object
-// const evalFieldsInSeries = (series) => {
-//   return keys(series).map(key => series[key].map(serie => sum(serie.map(field => field.value))))
-// }
+// series: Object => series: Array
+const evalFieldsInSeries = (series) => keys(series)
+  .map(key => series[key]
+    .map(serie => serie
+      .map(field => merge(field, {
+        eval: field.mark === ''
+          ? Math.abs(sum(serie.map(field => field.value)))
+          : 0
+      }))))
 
-const evalFieldsInBoard = (series) => { }
+// series: Array => board: Array
+const evalFieldsInBoard = (series) =>
+  times(y =>
+    times(x =>
+      flatten(series)
+        .filter(field => field.x === x && field.y === y)
+        .reduce((prev, curr) =>
+          assocPath(['eval'], prev.eval + curr.eval, prev)), 3), 3)
 
-const getBestField = (fields) => { }
+// board: Array => field: Object
+const getBestField = (board) => flatten(board).reduce((prev, curr) =>
+  prev.eval > curr.eval
+    ? prev
+    : curr
+)
 
 const getAiMove = (state) => {
   const appendFieldValues = appendToField({
