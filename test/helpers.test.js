@@ -4,15 +4,20 @@ import {
   createColumn as c,
   createBoard as b,
   createDiagonal as d,
-  deepEqualTests
+  getSeries
 } from '../src/utils'
 import {
   isFull,
   checkWinSerie,
   getWinSeries,
+  appendToField,
+  evalFieldsInSeries,
+  evalFieldsInBoard,
+  getBestField,
   getAiMove
 } from '../src/helpers'
 import state from '../src/state'
+import pipe from 'ramda/src/pipe'
 
 const setup = () => ({
   state,
@@ -52,6 +57,11 @@ const setup = () => ({
       ['O', 'X', 'X'],
       ['X', 'O', 'X']
     ])
+  },
+  markValues: {
+    '': 1, // empty field
+    'X': 7, // PC
+    'O': -6 // human player
   }
 })
 
@@ -107,19 +117,59 @@ test('getWinSeries() should return array of win series (no win => empty array)',
   assert.end()
 })
 
-{
-  const state = setup().state
-  deepEqualTests({
-    desc: '',
-    assertions: [
-      {
-        actual: getAiMove(state),
-        expected: b,
-        msg: ''
-      }
+test('appendToField() should return fields with values in board', assert => {
+  const board = b([
+    ['_', 'O', 'X'],
+    ['_', '_', '_'],
+    ['_', '_', '_']
+  ])
+  const markValues = setup().markValues
+  const expected = [
+    [
+      { x: 0, y: 0, mark: '', value: 1, win: false },
+      { x: 1, y: 0, mark: 'O', value: -6, win: false },
+      { x: 2, y: 0, mark: 'X', value: 7, win: false }
+    ],
+    [
+      { x: 0, y: 1, mark: '', value: 1, win: false },
+      { x: 1, y: 1, mark: '', value: 1, win: false },
+      { x: 2, y: 1, mark: '', value: 1, win: false }
+    ],
+    [
+      { x: 0, y: 2, mark: '', value: 1, win: false },
+      { x: 1, y: 2, mark: '', value: 1, win: false },
+      { x: 2, y: 2, mark: '', value: 1, win: false }
     ]
-  })
-}
+  ]
+  assert.deepEqual(
+    appendToField(markValues)(board),
+    expected,
+    'Field values appended'
+  )
+  assert.end()
+})
+
+test('evalMoves() should return fields with evaluation in each serie', assert => {
+  const markValues = setup().markValues
+  const board = b([
+    ['_', 'O', 'X'],
+    ['_', '_', 'X'],
+    ['_', '_', '_']
+  ])
+  const series = pipe(
+    appendToField(markValues),
+    getSeries
+  )(board)
+  const actual = evalFieldsInSeries(series).row[0][0] // first field in first row serie
+  const expected = { x: 0, y: 0, mark: '', value: 1, win: false, serieEval: 2 }
+
+  assert.deepEqual(
+    actual,
+    expected,
+    'Field serieEval appended'
+  )
+  assert.end()
+})
 
 // test('Get next move coord of AI', assert => {
 //   // @TODO

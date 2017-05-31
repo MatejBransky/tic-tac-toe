@@ -1,6 +1,6 @@
 import test from 'tape'
+import { deepEqualTests } from './testUtils'
 import {
-  deepEqualTests,
   createField,
   createRow,
   createColumn,
@@ -18,17 +18,17 @@ deepEqualTests({
   assertions: [
     {
       actual: createField('_', 0, 0),
-      expected: { x: 0, y: 0, mark: '', value: 1, win: false },
+      expected: { x: 0, y: 0, mark: '', win: false },
       msg: 'Empty field object.'
     },
     {
       actual: createField('O', 0, 1),
-      expected: { x: 0, y: 1, mark: 'O', value: 7, win: false },
+      expected: { x: 0, y: 1, mark: 'O', win: false },
       msg: 'Field object of player 1 with "O" mark.'
     },
     {
       actual: createField('X', 1, 0),
-      expected: { x: 1, y: 0, mark: 'X', value: -6, win: false },
+      expected: { x: 1, y: 0, mark: 'X', win: false },
       msg: 'Field object of player 2 with "X" mark.'
     }
   ]
@@ -40,9 +40,9 @@ deepEqualTests({
     {
       actual: createRow(['_', 'X', 'O'], 2),
       expected: [
-        { x: 0, y: 2, mark: '', value: 1, win: false },
-        { x: 1, y: 2, mark: 'X', value: -6, win: false },
-        { x: 2, y: 2, mark: 'O', value: 7, win: false }
+        { x: 0, y: 2, mark: '', win: false },
+        { x: 1, y: 2, mark: 'X', win: false },
+        { x: 2, y: 2, mark: 'O', win: false }
       ],
       msg: 'Last row with various fields: [_, X, O].'
     }
@@ -55,9 +55,9 @@ deepEqualTests({
     {
       actual: createColumn(['_', 'X', 'O'], 2),
       expected: [
-        { x: 2, y: 0, mark: '', value: 1, win: false },
-        { x: 2, y: 1, mark: 'X', value: -6, win: false },
-        { x: 2, y: 2, mark: 'O', value: 7, win: false }
+        { x: 2, y: 0, mark: '', win: false },
+        { x: 2, y: 1, mark: 'X', win: false },
+        { x: 2, y: 2, mark: 'O', win: false }
       ],
       msg: 'Last column with various fields: [_, X, O].'
     }
@@ -70,18 +70,18 @@ deepEqualTests({
     {
       actual: createDiagonal(['_', 'X', 'O'], 'topRight'),
       expected: [
-        { x: 2, y: 0, mark: '', value: 1, win: false },
-        { x: 1, y: 1, mark: 'X', value: -6, win: false },
-        { x: 0, y: 2, mark: 'O', value: 7, win: false }
+        { x: 2, y: 0, mark: '', win: false },
+        { x: 1, y: 1, mark: 'X', win: false },
+        { x: 0, y: 2, mark: 'O', win: false }
       ],
       msg: 'Diagonal serie from top-right corner to bottom-left corner with various fields: [_, X, O].'
     },
     {
       actual: createDiagonal(['_', 'X', 'O'], 'topLeft'),
       expected: [
-        { x: 0, y: 0, mark: '', value: 1, win: false },
-        { x: 1, y: 1, mark: 'X', value: -6, win: false },
-        { x: 2, y: 2, mark: 'O', value: 7, win: false }
+        { x: 0, y: 0, mark: '', win: false },
+        { x: 1, y: 1, mark: 'X', win: false },
+        { x: 2, y: 2, mark: 'O', win: false }
       ],
       msg: 'Diagonal serie from top-left corner to bottom-right corner with various fields: [_, X, O].'
     }
@@ -233,16 +233,16 @@ deepEqualTests({
 {
   const prevObj = {
     players: [
-      { name: '', mark: 'X', value: 7, score: 0 },
-      { name: '', mark: 'O', value: -6, score: 0 }
+      { name: '', mark: 'X', score: 0 },
+      { name: '', mark: 'O', score: 0 }
     ],
     ai: false,
     current: 0
   }
   const newObj = {
     players: [
-      { name: 'Player', mark: 'X', value: 7, score: 0 },
-      { name: 'PC', mark: 'O', value: -6, score: 0 }
+      { name: 'Player', mark: 'X', score: 0 },
+      { name: 'PC', mark: 'O', score: 0 }
     ],
     ai: true,
     current: 0
