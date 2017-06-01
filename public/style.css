@@ -137,6 +137,10 @@ button:hover {
   border: 1px solid rgb(100,100,100);
 }
 
+.board__field:disabled {
+  cursor: default;
+}
+
 .board__field--win {
   font-size: 20px;
 }
@@ -177,4 +181,5 @@ button:hover {
   padding: 40px;
   color: white;
   background: rgba(0,0,0,0.9);
+  cursor: pointer;
 }

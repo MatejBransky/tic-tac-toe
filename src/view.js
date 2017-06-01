@@ -71,6 +71,7 @@ export default {
                 <button
                   key={x}
                   className={`board__field ${field.win ? 'board__field--win' : ''}`}
+                  disabled={state.buttonDisabled}
                   onclick={() => actions.game.clickField({ x, y })}>
                   {field.mark}
                 </button>

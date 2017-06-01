@@ -27,5 +27,6 @@ export default {
     mark: '',
     win: false
   }), 3), 3),
-  message: ''
+  message: '',
+  buttonDisabled: false
 }

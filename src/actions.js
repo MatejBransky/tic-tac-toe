@@ -57,7 +57,7 @@ export default {
 
   game: {
     clickField: (state, actions, coord) => {
-      if (state.current || state.message !== '') return
+      if (state.current || state.message !== '' || state.board[coord.y][coord.x].mark !== '') return
       actions.game.setField(coord)
       actions.game.process()
     },
@@ -68,7 +68,7 @@ export default {
       state
     ),
 
-    process: (state, actions) => {
+    process: async (state, actions) => {
       const winSeries = getWinSeries(state.board)
 
       if (winSeries.length > 0) {
@@ -77,38 +77,47 @@ export default {
         actions.game.draw()
       } else {
         actions.game.setCurrent()
-        delay(500).then(actions.game.processAi)
+        await actions.game.processAi()
       }
     },
 
-    win: (state, actions, winSeries) => {
-      setTimeout(actions.game.showWinSeries, 500, winSeries)
-      setTimeout(actions.game.setMessage, 1000, 'win')
+    win: async (state, actions, winSeries) => {
+      actions.game.setButtons('disable')
+      await delay(300)
+      actions.game.showWinSeries(winSeries)
+      await delay(1000)
+      actions.game.increaseScore()
+      actions.game.setMessage('win')
     },
 
-    draw: (state, actions) => {
-      setTimeout(actions.game.setMessage, 500, 'draw')
-      setTimeout(actions.game.startNewMatch, 1000) // clear board
+    draw: async (state, actions) => {
+      actions.game.setButtons('disable')
+      await delay(200)
+      actions.game.setMessage('draw')
     },
 
-    setMessage: (state, actions, msg = '') => {
+    setMessage: (state, actions, msg = 'empty') => {
       const player = state.players[state.current].name
       const message = {
         win: `${player} wins!`,
         draw: 'It\'s a draw',
-        '': ''
+        empty: ''
       }
       return { message: message[msg] }
     },
 
     closeMessage: (state, actions) => {
       actions.game.setMessage()
-      actions.game.increaseScore()
       actions.game.startNewMatch() // clear board
     },
 
+    setButtons: (state, actions, setting) => setting === 'disable'
+      ? { buttonDisabled: true }
+      : { buttonDisable: false },
+
     startNewMatch: (state, actions) => {
-      actions.game.setCurrent(random(0, 1))
+      actions.game.setButtons('enable')
+      actions.game.setCurrent(0)
       actions.game.clearBoard()
       actions.game.processAi()
     },
@@ -129,9 +138,10 @@ export default {
       ? state.current ? { current: 0 } : { current: 1 }
       : { current: force },
 
-    processAi: (state, actions) => {
+    processAi: async (state, actions) => {
       if (state.ai && state.current) { // PC is always player n°1
         const aiCoord = getAiMove(state)
+        await delay(1000)
         actions.game.setField(aiCoord)
         actions.game.process()
       }
