@@ -9,7 +9,7 @@ export default {
         </div>
         <div className="options">
           {state.options.types.map((type, idType) =>
-            <button key={idType} onclick={() => actions.setGame(type)} className="options__button">
+            <button key={idType} onclick={() => actions.types.setGame(type)} className="options__button">
               {type.names.map((name, idName) =>
                 <div key={idName} className="options__player">{name} </div>
               )}

@@ -3,12 +3,24 @@ import type from 'ramda/src/type'
 import keys from 'ramda/src/keys'
 import transpose from 'ramda/src/transpose'
 import times from 'ramda/src/times'
+import repeat from 'ramda/src/repeat'
 import equals from 'ramda/src/equals'
 import merge from 'ramda/src/merge'
 import mergeAll from 'ramda/src/mergeAll'
 import assoc from 'ramda/src/assoc'
 import assocPath from 'ramda/src/assocPath'
 import path from 'ramda/src/path'
+
+/**
+ * Returns function for getting value (integer) from specified range
+ * @param {Number} input From zero to one
+ */
+const setRandom = (input = 0) => (start = 0, end = 1) => Math.round(input * (end - start) + start)
+
+/**
+ * Returns value from specified range (default range: from 0 to 1)
+ */
+const random = setRandom(Math.random())
 
 /**
  * Returns field object with predefined properties
@@ -80,14 +92,10 @@ const getDiagonals = board => [
 ]
 
 /**
- * Returns object of series { rows: [..], columns: [..], diagonals: [..] }
+ * Returns array of series [ ...rows, ...columns, ...diagonals ]
  * @param {Array} board Board with rows
  */
-const getSeries = board => ({
-  rows: board,
-  columns: getColumns(board),
-  diagonals: getDiagonals(board)
-})
+const getSeries = board => ([...board, ...getColumns(board), ...getDiagonals(board)])
 
 /**
  * Returns object (parent) with changed values (values) in key (key) 
@@ -113,6 +121,16 @@ const flatten = (object, separator = '.') => {
         ({ [append(key, path).join(separator)]: child[key] })
       ))
   }(object))
+}
+
+/**
+ * Returns 2D array with field values (for testing purposes)
+ * @param {Array} fields 
+ */
+const mapValuesToBoard = (fields) => {
+  const board = repeat(repeat('', 3), 3)
+  return fields.reduce((board, field) =>
+    assocPath([field.y, field.x], field.value, board), board)
 }
 
 /**
@@ -146,6 +164,8 @@ const printUpdates = (prevState, newState, separator = '/') => {
 }
 
 export {
+  setRandom,
+  random,
   createField,
   createRow,
   createColumn,
@@ -157,6 +177,7 @@ export {
   getSeries,
   distribute,
   flatten,
+  mapValuesToBoard,
   getUpdates,
   printUpdates
 }

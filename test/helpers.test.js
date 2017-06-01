@@ -10,11 +10,13 @@ import {
   isFull,
   checkWinSerie,
   getWinSeries,
-  appendToField,
-  evalFieldsInSeries,
-  evalFieldsInBoard,
-  getBestField,
-  getAiMove
+  getEmptyFields,
+  getStats,
+  appendStats,
+  appendSerieValue,
+  mapFields,
+  setSelectionOfField,
+  getCoords
 } from '../src/helpers'
 import state from '../src/state'
 import pipe from 'ramda/src/pipe'
@@ -58,10 +60,23 @@ const setup = () => ({
       ['X', 'O', 'X']
     ])
   },
-  markValues: {
-    '': 1, // empty field
-    'X': 7, // PC
-    'O': -6 // human player
+  procedures: {
+    getAiMove: {
+      marks: ['O', 'X'],
+      codes: {
+        '201': 100,
+        '021': 50,
+        '102': 5,
+        '003': 2,
+        '012': 1,
+        '111': 0
+      },
+      board: b([
+        ['X', 'X', '_'],
+        ['O', 'O', '_'],
+        ['O', '_', '_']
+      ])
+    }
   }
 })
 
@@ -117,60 +132,101 @@ test('getWinSeries() should return array of win series (no win => empty array)',
   assert.end()
 })
 
-test('appendToField() should return fields with values in board', assert => {
-  const board = b([
+test('getEmptyFields() should return array of empty fields', assert => {
+  const actual = getEmptyFields(b([
     ['_', 'O', 'X'],
-    ['_', '_', '_'],
-    ['_', '_', '_']
-  ])
-  const markValues = setup().markValues
+    ['_', 'O', 'X'],
+    ['O', 'O', 'X']
+  ]))
   const expected = [
-    [
-      { x: 0, y: 0, mark: '', value: 1, win: false },
-      { x: 1, y: 0, mark: 'O', value: -6, win: false },
-      { x: 2, y: 0, mark: 'X', value: 7, win: false }
-    ],
-    [
-      { x: 0, y: 1, mark: '', value: 1, win: false },
-      { x: 1, y: 1, mark: '', value: 1, win: false },
-      { x: 2, y: 1, mark: '', value: 1, win: false }
-    ],
-    [
-      { x: 0, y: 2, mark: '', value: 1, win: false },
-      { x: 1, y: 2, mark: '', value: 1, win: false },
-      { x: 2, y: 2, mark: '', value: 1, win: false }
-    ]
+    { x: 0, y: 0, mark: '', win: false },
+    { x: 0, y: 1, mark: '', win: false }
   ]
-  assert.deepEqual(
-    appendToField(markValues)(board),
-    expected,
-    'Field values appended'
-  )
+  assert.deepEqual(actual, expected, 'Array of two empty fields')
   assert.end()
 })
 
-test('evalMoves() should return fields with evaluation in each serie', assert => {
-  const markValues = setup().markValues
-  const board = b([
-    ['_', 'O', 'X'],
-    ['_', '_', 'X'],
-    ['_', '_', '_']
-  ])
-  const series = pipe(
-    appendToField(markValues),
-    getSeries
+test('getStats() should return stats of used marks in serie', assert => {
+  const marks = setup().procedures.getAiMove.marks // [ Player's mark, PC's mark ]
+  const serie = r(['O', 'X', '_'], 1)
+  const actual = getStats(marks)(serie)
+  const expected = { pc: 1, human: 1, empty: 1 }
+  assert.deepEqual(actual, expected, 'Stats with every mark option')
+  assert.end()
+})
+
+test('appendStats() should return series where each serie has key "stats"', assert => {
+  const { marks, board } = setup().procedures.getAiMove
+  const actual = pipe(
+    getSeries,
+    appendStats(marks)
+  )(board)[0]
+  const expected = { stats: { pc: 2, human: 0, empty: 1 }, fields: r(['X', 'X', '_'], 0) }
+  assert.deepEqual(actual, expected, 'First row with stats')
+  assert.end()
+})
+
+test('appendSerieValue() should return series where each field has key "value"', assert => {
+  const { marks, codes, board } = setup().procedures.getAiMove
+  const actual = pipe(
+    getSeries,
+    appendStats(marks),
+    appendSerieValue(codes)
+  )(board)[0]
+  const expected = [
+    { value: 100, mark: 'X', x: 0, y: 0, win: false },
+    { value: 100, mark: 'X', x: 1, y: 0, win: false },
+    { value: 100, mark: '', x: 2, y: 0, win: false }
+  ]
+  assert.deepEqual(actual, expected, 'First row and each field has value')
+  assert.end()
+})
+
+test('mapFields() should return empty fields with value', assert => {
+  const { marks, codes, board } = setup().procedures.getAiMove
+  const emptyFields = getEmptyFields(board)
+  const actual = pipe(
+    getSeries,
+    appendStats(marks),
+    appendSerieValue(codes),
+    mapFields(emptyFields)
   )(board)
-  const actual = evalFieldsInSeries(series).row[0][0] // first field in first row serie
-  const expected = { x: 0, y: 0, mark: '', value: 1, win: false, serieEval: 2 }
-
-  assert.deepEqual(
-    actual,
-    expected,
-    'Field serieEval appended'
-  )
+  const expected = [
+    { value: 152, mark: '', x: 2, y: 0, win: false },
+    { value: 52, mark: '', x: 2, y: 1, win: false },
+    { value: 1, mark: '', x: 1, y: 2, win: false },
+    { value: 3, mark: '', x: 2, y: 2, win: false }
+  ]
+  assert.deepEqual(actual, expected, 'Empty fields with resulting value')
   assert.end()
 })
 
-// test('Get next move coord of AI', assert => {
-//   // @TODO
-// })
+test('setSelectionOfField() should return field by specified selection method and from specified number of groups', assert => {
+  const getLastBiggest = (start, end) => Math.round(1 * (end - start) + start)
+  const fields = [
+    { value: 152, mark: '', x: 1, y: 0, win: false },
+    { value: 152, mark: '', x: 2, y: 0, win: false },
+    { value: 52, mark: '', x: 2, y: 1, win: false },
+    { value: 1, mark: '', x: 1, y: 2, win: false },
+    { value: 3, mark: '', x: 2, y: 2, win: false }
+  ]
+  const actual = setSelectionOfField(getLastBiggest)(1)(fields)
+  const expected = { value: 152, mark: '', x: 2, y: 0, win: false }
+  assert.deepEqual(actual, expected, 'Last biggest field')
+  assert.end()
+})
+
+test('getCoords(method)() should return coords of selected field with predefined method', assert => {
+  const fields = [
+    { value: 152, mark: '', x: 2, y: 0, win: false },
+    { value: 152, mark: '', x: 1, y: 0, win: false },
+    { value: 52, mark: '', x: 2, y: 1, win: false },
+    { value: 1, mark: '', x: 1, y: 2, win: false },
+    { value: 3, mark: '', x: 2, y: 2, win: false }
+  ]
+  const method = (fields) => fields[0]
+  const actual = getCoords(method)(fields)
+  const expected = { x: 2, y: 0 }
+  assert.deepEqual(actual, expected, 'First best field')
+  assert.end()
+})

@@ -1,6 +1,7 @@
 import test from 'tape'
 import { deepEqualTests } from './testUtils'
 import {
+  setRandom,
   createField,
   createRow,
   createColumn,
@@ -10,8 +11,35 @@ import {
   getDiagonals,
   distribute,
   flatten,
+  mapValuesToBoard,
   getUpdates
 } from '../src/utils'
+
+deepEqualTests({
+  desc: 'setRandom() should return value in range',
+  assertions: [
+    {
+      actual: setRandom(0)(0, 3),
+      expected: 0,
+      msg: 'The lowest value (zero) in range'
+    },
+    {
+      actual: setRandom(0)(1, 3),
+      expected: 1,
+      msg: 'The lowest value in range'
+    },
+    {
+      actual: setRandom(1)(1, 3),
+      expected: 3,
+      msg: 'The highest value in range'
+    },
+    {
+      actual: setRandom(0.5)(1, 3),
+      expected: 2,
+      msg: 'The middle value in range'
+    }
+  ]
+})
 
 deepEqualTests({
   desc: 'createField() should return field object with predefined values',
@@ -228,6 +256,23 @@ deepEqualTests({
       msg: 'Flattened object with custom separator'
     }
   ]
+})
+
+test('mapValuesToBoard() should return board with values', assert => {
+  const fields = [
+    { value: 152, mark: '', x: 2, y: 0, win: false },
+    { value: 52, mark: '', x: 2, y: 1, win: false },
+    { value: 1, mark: '', x: 1, y: 2, win: false },
+    { value: 3, mark: '', x: 2, y: 2, win: false }
+  ]
+  const actual = mapValuesToBoard(fields)
+  const expected = [
+    ['', '', 152],
+    ['', '', 52],
+    ['', 1, 3]
+  ]
+  assert.deepEqual(actual, expected, 'Board with values')
+  assert.end()
 })
 
 {
