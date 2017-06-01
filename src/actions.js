@@ -75,24 +75,28 @@ export default {
     },
 
     win: (state, actions, winSeries) => {
-      actions.game.showWinSeries(winSeries)
-      actions.game.showMessage('win')
-      actions.game.increaseScore()
-      actions.game.startNewMatch() // clear board
+      setTimeout(actions.game.showWinSeries, 500, winSeries)
+      setTimeout(actions.game.setMessage, 1500, 'win')
     },
 
     draw: (state, actions) => {
-      actions.game.showMessage('draw')
+      actions.game.setMessage('draw')
       actions.game.startNewMatch() // clear board
     },
 
-    showMessage: (state, actions, msg) => {
+    setMessage: (state, actions, msg) => {
       const player = state.players[state.current].name
       const message = {
         win: `${player} wins!`,
         draw: 'It\'s a draw'
       }
       return { message: message[msg] }
+    },
+
+    closeMessage: (state, actions) => {
+      actions.game.setMessage('')
+      actions.game.increaseScore()
+      actions.game.startNewMatch() // clear board
     },
 
     startNewMatch: () => ({
@@ -114,7 +118,10 @@ export default {
     processAi: (state, actions) => {
       if (state.ai && state.current) { // PC is always player n°1
         const aiCoord = getAiMove(state)
-        actions.game.process(aiCoord)
+        setTimeout((aiCoord) => {
+          actions.game.setField(aiCoord)
+          actions.game.process()
+        }, 500, aiCoord)
       }
     },
 

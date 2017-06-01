@@ -41,7 +41,13 @@ export default {
 
   '/game': (state, actions) =>
     <Box >
-      {state.message && <div>{state.message}</div>}
+      {state.message && (
+        <div
+          className="message"
+          onclick={actions.game.closeMessage}>
+          {state.message}
+        </div>
+      )}
       <div>
         <div className="status">
           <div className="status__players">
