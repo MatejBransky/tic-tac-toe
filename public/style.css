@@ -60,6 +60,7 @@ button:hover {
 }
 
 .box {
+  position: relative;
   width: 300px;
   padding: 20px;
   text-align: center;
@@ -136,6 +137,10 @@ button:hover {
   border: 1px solid rgb(100,100,100);
 }
 
+.board__field--win {
+  font-size: 20px;
+}
+
 .board__field:hover {
   border-color: rgb(100,100,100);
 }
@@ -160,4 +165,16 @@ button:hover {
   padding-top: 10px;
   margin-top: 10px;
   border-top: 2px solid rgb(250,250,250);
+}
+
+.message {
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  padding: 40px;
+  color: white;
+  background: rgba(0,0,0,0.9);
 }

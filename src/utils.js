@@ -11,6 +11,8 @@ import assoc from 'ramda/src/assoc'
 import assocPath from 'ramda/src/assocPath'
 import path from 'ramda/src/path'
 
+const delay = (time) => new Promise(resolve => setTimeout(resolve, time))
+
 /**
  * Returns function for getting value (integer) from specified range
  * @param {Number} input From zero to one
@@ -164,6 +166,7 @@ const printUpdates = (prevState, newState, separator = '/') => {
 }
 
 export {
+  delay,
   setRandom,
   random,
   createField,

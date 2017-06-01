@@ -70,11 +70,8 @@ export default {
               {row.map((field, x) =>
                 <button
                   key={x}
-                  className="board__field"
-                  onclick={() => {
-                    actions.game.setField({ x, y })
-                    actions.game.process()
-                  }}>
+                  className={`board__field ${field.win ? 'board__field--win' : ''}`}
+                  onclick={() => actions.game.clickField({ x, y })}>
                   {field.mark}
                 </button>
               )}

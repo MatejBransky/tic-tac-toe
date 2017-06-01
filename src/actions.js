@@ -1,4 +1,6 @@
 import {
+  delay,
+  random,
   createField,
   distribute
 } from './utils'
@@ -54,6 +56,12 @@ export default {
   },
 
   game: {
+    clickField: (state, actions, coord) => {
+      if (state.current || state.message !== '') return
+      actions.game.setField(coord)
+      actions.game.process()
+    },
+
     setField: (state, actions, coord) => assocPath(
       ['board', coord.y, coord.x, 'mark'],
       state.players[state.current].mark,
@@ -61,47 +69,51 @@ export default {
     ),
 
     process: (state, actions) => {
-      const full = isFull(state.board)
       const winSeries = getWinSeries(state.board)
 
       if (winSeries.length > 0) {
         actions.game.win(winSeries)
-      } else if (full) {
+      } else if (isFull(state.board)) {
         actions.game.draw()
       } else {
         actions.game.setCurrent()
-        actions.game.processAi()
+        delay(500).then(actions.game.processAi)
       }
     },
 
     win: (state, actions, winSeries) => {
       setTimeout(actions.game.showWinSeries, 500, winSeries)
-      setTimeout(actions.game.setMessage, 1500, 'win')
+      setTimeout(actions.game.setMessage, 1000, 'win')
     },
 
     draw: (state, actions) => {
-      actions.game.setMessage('draw')
-      actions.game.startNewMatch() // clear board
+      setTimeout(actions.game.setMessage, 500, 'draw')
+      setTimeout(actions.game.startNewMatch, 1000) // clear board
     },
 
-    setMessage: (state, actions, msg) => {
+    setMessage: (state, actions, msg = '') => {
       const player = state.players[state.current].name
       const message = {
         win: `${player} wins!`,
-        draw: 'It\'s a draw'
+        draw: 'It\'s a draw',
+        '': ''
       }
       return { message: message[msg] }
     },
 
     closeMessage: (state, actions) => {
-      actions.game.setMessage('')
+      actions.game.setMessage()
       actions.game.increaseScore()
       actions.game.startNewMatch() // clear board
     },
 
-    startNewMatch: () => ({
-      board: times(y => times(x => createField('_', x, y), 3), 3)
-    }),
+    startNewMatch: (state, actions) => {
+      actions.game.setCurrent(random(0, 1))
+      actions.game.clearBoard()
+      actions.game.processAi()
+    },
+
+    clearBoard: () => ({ board: times(y => times(x => createField('_', x, y), 3), 3) }),
 
     showWinSeries: (state, actions, winSeries) =>
       flatten(winSeries).reduce((board, field) =>
@@ -113,15 +125,15 @@ export default {
       return set(score, value, state)
     },
 
-    setCurrent: (state) => state.current ? { current: 0 } : { current: 1 },
+    setCurrent: (state, actions, force = undefined) => force === undefined
+      ? state.current ? { current: 0 } : { current: 1 }
+      : { current: force },
 
     processAi: (state, actions) => {
       if (state.ai && state.current) { // PC is always player n°1
         const aiCoord = getAiMove(state)
-        setTimeout((aiCoord) => {
-          actions.game.setField(aiCoord)
-          actions.game.process()
-        }, 500, aiCoord)
+        actions.game.setField(aiCoord)
+        actions.game.process()
       }
     },
 
