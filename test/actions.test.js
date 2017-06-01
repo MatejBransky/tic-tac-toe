@@ -91,18 +91,18 @@ test('game.showWinSeries() should update key "win" in field objects of win serie
   assert.end()
 })
 
-test('game.showMessage() should update message in state', assert => {
+test('game.setMessage() should update message in state', assert => {
   const state = pipe(
     assocPath(['current'], 0),
     assocPath(['players', 0, 'name'], 'Player 1')
   )(setup())
   assert.deepEqual(
-    actions.game.showMessage(state, actions, 'win'),
+    actions.game.setMessage(state, actions, 'win'),
     { message: 'Player 1 wins!' },
     'Message: Player 1 wins!'
   )
   assert.deepEqual(
-    actions.game.showMessage(state, actions, 'draw'),
+    actions.game.setMessage(state, actions, 'draw'),
     { message: 'It\'s a draw' },
     'Message: It\'s a draw'
   )
@@ -136,8 +136,8 @@ test('game.increaseScore() should update score', assert => {
   const state = setup()
   const expected = merge(state, {
     players: [
-      { name: 'Player', mark: 'X', score: 1 },
-      { name: 'Player', mark: 'O', score: 0 }
+      merge(state.players[0], { score: 1 }),
+      merge(state.players[1], { score: 0 })
     ]
   })
   assert.deepEqual(
