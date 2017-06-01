@@ -41,7 +41,7 @@ export default {
 
   '/game': (state, actions) =>
     <Box >
-      {state.message && <div>state.message</div>}
+      {state.message && <div>{state.message}</div>}
       <div>
         <div className="status">
           <div className="status__players">
@@ -65,7 +65,10 @@ export default {
                 <button
                   key={x}
                   className="board__field"
-                  onclick={() => actions.game.process({ x, y })}>
+                  onclick={() => {
+                    actions.game.setField({ x, y })
+                    actions.game.process()
+                  }}>
                   {field.mark}
                 </button>
               )}

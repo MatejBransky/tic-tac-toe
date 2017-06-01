@@ -54,27 +54,25 @@ export default {
   },
 
   game: {
-    process: (state, actions, coord) => {
-      actions.game.setField(coord)
-
-      if (isFull(state.board)) {
-        const winSeries = getWinSeries(state.board)
-        if (winSeries.length > 0) {
-          actions.game.win(winSeries)
-        } else {
-          actions.game.draw()
-        }
-      } else {
-        actions.game.setCurrent()
-        actions.game.processAi()
-      }
-    },
-
     setField: (state, actions, coord) => assocPath(
       ['board', coord.y, coord.x, 'mark'],
       state.players[state.current].mark,
       state
     ),
+
+    process: (state, actions) => {
+      const full = isFull(state.board)
+      const winSeries = getWinSeries(state.board)
+
+      if (winSeries.length > 0) {
+        actions.game.win(winSeries)
+      } else if (full) {
+        actions.game.draw()
+      } else {
+        actions.game.setCurrent()
+        actions.game.processAi()
+      }
+    },
 
     win: (state, actions, winSeries) => {
       actions.game.showWinSeries(winSeries)
