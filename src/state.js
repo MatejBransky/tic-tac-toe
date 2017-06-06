@@ -1,6 +1,7 @@
 import times from 'ramda/src/times'
 
 export default {
+  page: 'Types',
   options: {
     types: [
       {

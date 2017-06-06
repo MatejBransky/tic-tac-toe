@@ -18,6 +18,8 @@ import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 
 export default {
+  go: (state, actions, page) => ({ page }),
+
   types: {
     setAi: (state, actions, ai) => assocPath(['ai'], ai, state),
 
@@ -31,7 +33,6 @@ export default {
     setGame: (state, actions, type) => {
       actions.types.setAi(type.ai)
       actions.types.setNames(type.names)
-      actions.router.go('/marks')
     }
   },
 
@@ -51,13 +52,14 @@ export default {
 
     setGame: (state, actions) => {
       actions.marks.setMarks()
-      actions.router.go('/game')
     }
   },
 
   game: {
     clickField: (state, actions, coord) => {
-      if (state.current || state.message !== '' || state.board[coord.y][coord.x].mark !== '') return
+      if (state.current && state.ai
+        || state.message !== ''
+        || state.board[coord.y][coord.x].mark !== '') return
       actions.game.setField(coord)
       actions.game.process()
     },
@@ -92,7 +94,7 @@ export default {
 
     draw: async (state, actions) => {
       actions.game.wait()
-      await delay(200)
+      await delay(500)
       actions.game.setMessage('draw')
     },
 
@@ -116,7 +118,7 @@ export default {
     continue: () => ({ waiting: false }),
 
     startNewMatch: async (state, actions) => {
-      actions.game.setCurrent(1)
+      actions.game.setCurrent()
       actions.game.clearBoard()
       await actions.game.processAi()
       actions.game.continue()
