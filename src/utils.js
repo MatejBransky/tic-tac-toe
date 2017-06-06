@@ -11,6 +11,7 @@ import assoc from 'ramda/src/assoc'
 import assocPath from 'ramda/src/assocPath'
 import path from 'ramda/src/path'
 
+// time delay
 const delay = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 /**

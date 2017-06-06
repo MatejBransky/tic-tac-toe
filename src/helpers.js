@@ -8,6 +8,7 @@ import zipObj from 'ramda/src/zipObj'
 import groupWith from 'ramda/src/groupWith'
 import { random, getSeries } from './utils'
 
+// board: Array => boolean
 const isFull = (board) => {
   const fieldsMarks = board.reduce((marks, row) =>
     concat(marks, row.map(field => field.mark)), [])
