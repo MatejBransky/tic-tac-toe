@@ -45,7 +45,8 @@ export default {
         <div
           className="message"
           onclick={actions.game.closeMessage}>
-          {state.message}
+          <h1>{state.message}</h1>
+          <p className="small">Click to continue</p>
         </div>
       )}
       <div>
@@ -71,7 +72,7 @@ export default {
                 <button
                   key={x}
                   className={`board__field ${field.win ? 'board__field--win' : ''}`}
-                  disabled={state.buttonDisabled}
+                  disabled={state.waiting}
                   onclick={() => actions.game.clickField({ x, y })}>
                   {field.mark}
                 </button>
@@ -79,8 +80,13 @@ export default {
             </div>
           )}
         </div>
-        <div className="settings">
-          <button>Restart</button>
+        <div className="bottom">
+          <button
+            className="restart"
+            onclick={actions.game.restart}
+            disabled={state.message !== ''}>
+            Restart
+          </button>
         </div>
       </div>
     </Box >
@@ -90,3 +96,5 @@ const Box = (props, children) =>
   <div className="box">
     {children}
   </div>
+
+

@@ -28,5 +28,5 @@ export default {
     win: false
   }), 3), 3),
   message: '',
-  buttonDisabled: false
+  waiting: false
 }

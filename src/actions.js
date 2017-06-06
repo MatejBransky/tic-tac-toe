@@ -68,7 +68,7 @@ export default {
       state
     ),
 
-    process: async (state, actions) => {
+    process: (state, actions) => {
       const winSeries = getWinSeries(state.board)
 
       if (winSeries.length > 0) {
@@ -77,12 +77,12 @@ export default {
         actions.game.draw()
       } else {
         actions.game.setCurrent()
-        await actions.game.processAi()
+        actions.game.processAi()
       }
     },
 
     win: async (state, actions, winSeries) => {
-      actions.game.setButtons('disable')
+      actions.game.wait()
       await delay(300)
       actions.game.showWinSeries(winSeries)
       await delay(1000)
@@ -91,7 +91,7 @@ export default {
     },
 
     draw: async (state, actions) => {
-      actions.game.setButtons('disable')
+      actions.game.wait()
       await delay(200)
       actions.game.setMessage('draw')
     },
@@ -111,15 +111,15 @@ export default {
       actions.game.startNewMatch() // clear board
     },
 
-    setButtons: (state, actions, setting) => setting === 'disable'
-      ? { buttonDisabled: true }
-      : { buttonDisable: false },
+    wait: () => ({ waiting: true }),
 
-    startNewMatch: (state, actions) => {
-      actions.game.setButtons('enable')
-      actions.game.setCurrent(0)
+    continue: () => ({ waiting: false }),
+
+    startNewMatch: async (state, actions) => {
+      actions.game.setCurrent(1)
       actions.game.clearBoard()
-      actions.game.processAi()
+      await actions.game.processAi()
+      actions.game.continue()
     },
 
     clearBoard: () => ({ board: times(y => times(x => createField('_', x, y), 3), 3) }),
@@ -140,15 +140,20 @@ export default {
 
     processAi: async (state, actions) => {
       if (state.ai && state.current) { // PC is always player n°1
+        actions.game.wait()
         const aiCoord = getAiMove(state)
         await delay(1000)
         actions.game.setField(aiCoord)
         actions.game.process()
+      } else {
+        actions.game.continue()
       }
     },
 
     restart: (state, actions) => {
-      actions.game.startNewMatch()
+      if (state.message === '') {
+        actions.game.startNewMatch()
+      }
     }
   }
 }
