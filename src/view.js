@@ -52,7 +52,7 @@ const Marks = (state, actions) => (
       <div className="options">
         <button onclick={actions.marks.switchMarks}>Switch</button>
         <button onclick={() => {
-          actions.marks.setGame
+          actions.marks.setGame()
           actions.go('Game')
         }}>
           Submit
