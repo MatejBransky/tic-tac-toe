@@ -17,8 +17,8 @@ export default {
   },
 
   players: [
-    { name: 'Player', mark: 'X', score: 0 },
-    { name: 'PC', mark: 'O', score: 0 }
+    { name: '', mark: '', score: 0 },
+    { name: '', mark: '', score: 0 }
   ],
   ai: true,
   current: 0,
