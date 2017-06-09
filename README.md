@@ -61,6 +61,9 @@ npm start
 It will bundle js files from `src` folder to `bundle` folder and watch any changes in both directories.
 
 
+## TODO list:
+- change AI algorithm to minimax
+
 ## License
 
 ISC
