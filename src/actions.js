@@ -144,7 +144,7 @@ export default {
       if (state.ai && state.current) { // PC is always player n°1
         actions.game.wait()
         const aiCoord = getAiMove(state)
-        await delay(1000)
+        await delay(500)
         actions.game.setField(aiCoord)
         actions.game.process()
       } else {
