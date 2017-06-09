@@ -1,9 +1,10 @@
 # Tic Tac Toe
 
+([FreeCodeCamp](http://www.freecodecamp.com) project)
 
 ## How to play
 
-1. Click on this [link](https://codepen.io/MatejMazur/full/Ngqaaj/). It loads game.
+1. Click on this [link](http://tictactoe-hyperapp.surge.sh/) (Surge.sh) or this [link](https://codepen.io/MatejMazur/full/Ngqaaj/) (CodePen). It loads game.
 2. Select type of game and proceed next.
 3. Select marks for players by switch button and then start game.
 4. When is your turn click on any (select best option) field and it'll be marked with your selected mark.

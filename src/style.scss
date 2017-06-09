@@ -99,6 +99,14 @@ button:hover {
 .options__player {
   position: relative;
   width: 50%;
+
+  &:first-child {
+    text-align: left;
+  }
+
+  &:last-child {
+    text-align: right;
+  }
 }
 
 .status {
