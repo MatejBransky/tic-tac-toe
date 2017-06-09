@@ -26,7 +26,8 @@ tic-tac-toe
 ├── test                    // Folder with test files
 │   ├── utils.test.js
 │   ├── helpers.test.js
-│   └── actions.test.js
+│   ├── actions.test.js
+│   └── testUtils.js          // Wrappers around test function
 ├── src                     // Folder with unbundled source JavaScript files
 │   ├── app.js                // Main JS file with connecting other parts of app
 │   ├── state.js              // State of app
@@ -34,12 +35,14 @@ tic-tac-toe
 │   ├── actions.js            // Actions of app
 │   ├── events.js             // Events of app
 │   ├── utils.js              // Functions for better dev
-│   └── helpers.js            // Functions for actions
-├── public                  // Output folder with index.html, style.css and bundle.js
+│   ├── helpers.js            // Functions for actions
+│   └── style.scss
+├── public                  // Output folder with index.html, style.css and
 │   ├── index.html
 │   ├── style.css
 │   └── bundle.js
 ├── .gitignore
+├── package-lock.json
 ├── package.json
 ├── .editorconfig
 ├── .babelrc
@@ -63,6 +66,7 @@ It will bundle js files from `src` folder to `bundle` folder and watch any chang
 
 ## TODO list:
 - change AI algorithm to minimax
+- update dev environment (watcher for Sass and JS)
 
 ## License
 
