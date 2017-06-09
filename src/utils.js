@@ -1,12 +1,5 @@
-import append from 'ramda/src/append'
-import type from 'ramda/src/type'
-import keys from 'ramda/src/keys'
 import transpose from 'ramda/src/transpose'
 import times from 'ramda/src/times'
-import repeat from 'ramda/src/repeat'
-import equals from 'ramda/src/equals'
-import merge from 'ramda/src/merge'
-import mergeAll from 'ramda/src/mergeAll'
 import assoc from 'ramda/src/assoc'
 import assocPath from 'ramda/src/assocPath'
 import path from 'ramda/src/path'
@@ -111,61 +104,6 @@ const distribute = ({ key, values, course, parent }) => {
   return assocPath(course, objects, parent)
 }
 
-/**
- * Returns flattened object with values appended to keys which describe path to value in previous object.
- * @param {Object} object 
- * @param {String} separator Separator in keys with path (e.g. ".", "/", "|")
- */
-const flatten = (object, separator = '.') => {
-  return mergeAll(function _flatten(child, path = []) {
-    return [].concat(...keys(child)
-      .map(key => type(child[key]) === 'Object' || type(child[key]) === 'Array' ?
-        _flatten(child[key], append(key, path)) :
-        ({ [append(key, path).join(separator)]: child[key] })
-      ))
-  }(object))
-}
-
-/**
- * Returns 2D array with field values (for testing purposes)
- * @param {Array} fields 
- */
-const mapValuesToBoard = (fields) => {
-  const board = repeat(repeat('', 3), 3)
-  return fields.reduce((board, field) =>
-    assocPath([field.y, field.x], field.value, board), board)
-}
-
-/**
- * Returns array of objects which describe updates in state
- * @param {Object} prevState 
- * @param {Object} newState 
- */
-const getUpdates = (prevState, newState) => {
-  const SEPARATOR = '.'
-  const flattenPrev = flatten(prevState, SEPARATOR)
-  const flattenNew = flatten(newState, SEPARATOR)
-  return keys(flattenNew).reduce((updates, key) => equals(flattenPrev[key], flattenNew[key]) ?
-    updates :
-    append({
-      path: key.split(SEPARATOR),
-      oldValue: flattenPrev[key],
-      newValue: flattenNew[key]
-    }, updates), [])
-}
-
-/**
- * Logs updates in table
- * @param {Object} prevState 
- * @param {Object} newState 
- * @param {String} separator 
- */
-const printUpdates = (prevState, newState, separator = '/') => {
-  const updates = getUpdates(prevState, newState)
-    .map(update => merge(update, { path: update.path.join(separator) }))
-  console.table(updates)
-}
-
 export {
   delay,
   setRandom,
@@ -179,9 +117,5 @@ export {
   getColumns,
   getDiagonals,
   getSeries,
-  distribute,
-  flatten,
-  mapValuesToBoard,
-  getUpdates,
-  printUpdates
+  distribute
 }
