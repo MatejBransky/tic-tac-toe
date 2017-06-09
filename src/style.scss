@@ -53,6 +53,7 @@ button {
   border-bottom-color: transparent;
   cursor: pointer;
   outline: none;
+  touch-action: manipulation;
 }
 
 button:hover {
