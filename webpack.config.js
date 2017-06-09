@@ -9,8 +9,14 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      }
     ]
   },
   devtool: 'inline-source-map',
@@ -20,7 +26,7 @@ module.exports = {
       port: 3000,
       server: {
         baseDir: 'public',
-        middleware: [ historyApiFallback() ]
+        middleware: [historyApiFallback()]
       },
       files: 'public/**'
     })

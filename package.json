@@ -5,6 +5,7 @@
   "main": "public/bundle.js",
   "scripts": {
     "test": "tape --require babel-register test/**/*.js | tap-spec",
+    "css": "node-sass src/style.scss -o public/ && postcss --use autoprefixer -r public/style.css",
     "webpack": "webpack -w",
     "start": "npm run webpack"
   },
@@ -20,7 +21,7 @@
     "fcc",
     "fp",
     "hyperapp",
-    "elm"
+    "elm-architecture"
   ],
   "author": "Matej Mazur",
   "license": "ISC",
@@ -32,16 +33,19 @@
     "hyperapp": "^0.9.1"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.5.2",
     "babel-register": "^6.24.1",
     "browser-sync": "^2.18.11",
     "browser-sync-webpack-plugin": "^1.1.4",
     "connect-history-api-fallback": "^1.3.0",
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
+    "node-sass": "^4.5.3",
+    "postcss-cli": "^4.0.0",
     "ramda": "^0.23.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",

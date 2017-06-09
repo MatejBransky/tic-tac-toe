@@ -99,9 +99,9 @@ export default {
     },
 
     setMessage: (state, actions, msg = 'empty') => {
-      const player = state.players[state.current].name
+      const mark = state.players[state.current].mark
       const message = {
-        win: `${player} wins!`,
+        win: `${mark} wins!`,
         draw: 'It\'s a draw',
         empty: ''
       }
