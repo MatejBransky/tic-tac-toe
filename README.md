@@ -67,6 +67,7 @@ It will bundle js files from `src` folder to `bundle` folder and watch any chang
 ## TODO list:
 - change AI algorithm to minimax
 - update dev environment (watcher for Sass and JS)
+- update old CSS with Sass variables and mixins
 
 ## License
 
