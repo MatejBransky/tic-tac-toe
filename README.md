@@ -42,6 +42,8 @@ tic-tac-toe
 │   ├── index.html
 │   ├── style.css
 │   └── bundle.js
+├── eval.xlsx               // AI algorithm in Excel (see also algorithm.gif)
+├── algorithm.gif           // Problem with evaluation of best AI move (solution => minimax)
 ├── .gitignore
 ├── package-lock.json
 ├── package.json
