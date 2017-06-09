@@ -9,10 +9,7 @@ import {
   createBoard,
   createSerie,
   getDiagonals,
-  distribute,
-  flatten,
-  mapValuesToBoard,
-  getUpdates
+  distribute
 } from '../src/utils'
 
 deepEqualTests({
@@ -207,103 +204,3 @@ deepEqualTests({
     }
   ]
 })
-
-deepEqualTests({
-  desc: 'flatten() should return flattened object',
-  assertions: [
-    {
-      actual: flatten({
-        foo: 'bar',
-        boo: {
-          bum: [1, 2],
-          bam: false,
-          bong: {
-            wow: 'how',
-            num: 2
-          }
-        }
-      }),
-      expected: {
-        foo: 'bar',
-        'boo.bum.0': 1,
-        'boo.bum.1': 2,
-        'boo.bam': false,
-        'boo.bong.wow': 'how',
-        'boo.bong.num': 2
-      },
-      msg: 'Flattened object with default separator'
-    },
-    {
-      actual: flatten({
-        foo: 'bar',
-        boo: {
-          bum: [1, 2],
-          bam: false,
-          bong: {
-            wow: 'how',
-            num: 2
-          }
-        }
-      }, '/'),
-      expected: {
-        foo: 'bar',
-        'boo/bum/0': 1,
-        'boo/bum/1': 2,
-        'boo/bam': false,
-        'boo/bong/wow': 'how',
-        'boo/bong/num': 2
-      },
-      msg: 'Flattened object with custom separator'
-    }
-  ]
-})
-
-test('mapValuesToBoard() should return board with values', assert => {
-  const fields = [
-    { value: 152, mark: '', x: 2, y: 0, win: false },
-    { value: 52, mark: '', x: 2, y: 1, win: false },
-    { value: 1, mark: '', x: 1, y: 2, win: false },
-    { value: 3, mark: '', x: 2, y: 2, win: false }
-  ]
-  const actual = mapValuesToBoard(fields)
-  const expected = [
-    ['', '', 152],
-    ['', '', 52],
-    ['', 1, 3]
-  ]
-  assert.deepEqual(actual, expected, 'Board with values')
-  assert.end()
-})
-
-{
-  const prevObj = {
-    players: [
-      { name: '', mark: 'X', score: 0 },
-      { name: '', mark: 'O', score: 0 }
-    ],
-    ai: false,
-    current: 0
-  }
-  const newObj = {
-    players: [
-      { name: 'Player', mark: 'X', score: 0 },
-      { name: 'PC', mark: 'O', score: 0 }
-    ],
-    ai: true,
-    current: 0
-  }
-  deepEqualTests({
-    desc: 'getUpdates() should return array of updates',
-    assertions: [
-      {
-        actual: getUpdates(prevObj, newObj),
-        expected: [
-          { path: ['players', '0', 'name'], oldValue: '', newValue: 'Player' },
-          { path: ['players', '1', 'name'], oldValue: '', newValue: 'PC' },
-          { path: ['ai'], oldValue: false, newValue: true }
-        ],
-        msg: 'Updates of names and ai setting'
-      }
-    ]
-  })
-}

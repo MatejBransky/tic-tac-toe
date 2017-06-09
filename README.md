@@ -10,6 +10,7 @@
 4. When is your turn click on any (select best option) field and it'll be marked with your selected mark.
 5. The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row wins the game.
 6. When game is over it starts new match with score tracked from the beginning.
+7. Button "Restart" starts new match.
 
 
 ## How to use it

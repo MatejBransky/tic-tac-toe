@@ -94,40 +94,17 @@ test('game.showWinSeries() should update key "win" in field objects of win serie
 test('game.setMessage() should update message in state', assert => {
   const state = pipe(
     assocPath(['current'], 0),
-    assocPath(['players', 0, 'name'], 'Player 1')
+    assocPath(['players', 0, 'mark'], 'X')
   )(setup())
   assert.deepEqual(
     actions.game.setMessage(state, actions, 'win'),
-    { message: 'Player 1 wins!' },
-    'Message: Player 1 wins!'
+    { message: 'X wins!' },
+    'Message: X wins!'
   )
   assert.deepEqual(
     actions.game.setMessage(state, actions, 'draw'),
     { message: 'It\'s a draw' },
     'Message: It\'s a draw'
-  )
-  assert.end()
-})
-
-test('game.startNewMatch() should clear the board', assert => {
-  const state = merge(setup(), {
-    board: b([
-      ['_', 'X', 'O'],
-      ['_', 'X', '_'],
-      ['_', 'X', '_']
-    ])
-  })
-  const newBoard = {
-    board: b([
-      ['_', '_', '_'],
-      ['_', '_', '_'],
-      ['_', '_', '_']
-    ])
-  }
-  assert.deepEqual(
-    actions.game.startNewMatch(state, actions),
-    newBoard,
-    'Filled board -> empty board'
   )
   assert.end()
 })
