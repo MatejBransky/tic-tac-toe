@@ -235,3 +235,13 @@ button:hover {
   color: rgb(180,180,180);
   font-size: 12px;
 }
+
+.time-travel {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+
+  &__button {
+    margin: 5px;
+  }
+}

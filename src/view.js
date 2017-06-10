@@ -3,18 +3,23 @@ import { TimeTravel } from './history'
 
 export default (state, actions) => {
   const views = { Types, Marks, Game }
-  return views[state.page](state, actions)
+  const Page = views[state.page]
+  return (
+    <Box state={state} actions={actions}>
+      <Page state={state} actions={actions} />
+    </Box>
+  )
 }
 
 const Box = (props, children) => (
   <div className="box">
-    <TimeTravel />
+    <TimeTravel {...props} />
     {children}
   </div>
 )
 
-const Types = (state, actions) => (
-  <Box>
+const Types = ({ state, actions }) => (
+  <div>
     <div>
       <div>
         <h1>Type of game</h1>
@@ -35,11 +40,11 @@ const Types = (state, actions) => (
         )}
       </div>
     </div>
-  </Box>
+  </div>
 )
 
-const Marks = (state, actions) => (
-  <Box>
+const Marks = ({ state, actions }) => (
+  <div>
     <div>
       <div className="status">
         <div className="status__players">
@@ -61,12 +66,12 @@ const Marks = (state, actions) => (
         </button>
       </div>
     </div>
-  </Box>
+  </div>
 )
 
 
-const Game = (state, actions) => (
-  <Box>
+const Game = ({ state, actions }) => (
+  <div>
     {state.message && (
       <div
         className="message"
@@ -119,5 +124,5 @@ const Game = (state, actions) => (
           </button>
       </div>
     </div >
-  </Box>
+  </div>
 )

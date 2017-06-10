@@ -1,9 +1,12 @@
+import { h } from 'hyperapp'
 import lensPath from 'ramda/src/lensPath'
 import set from 'ramda/src/set'
 import view from 'ramda/src/view'
 import merge from 'ramda/src/merge'
 import append from 'ramda/src/append'
 import dissoc from 'ramda/src/dissoc'
+import last from 'ramda/src/last'
+import dropLast from 'ramda/src/dropLast'
 
 /*
 
@@ -24,7 +27,23 @@ const save = (prevState, nextState) => {
     prevStateWithoutHistory,
     view(pastPath, nextState)
   )
-  return set(pastPath, newPast, nextState)
+  return set(pastPath, newPast, merge(prevState, nextState))
+}
+
+const undo = (state) => {
+  const { past, future } = state.history
+  if (past.length === 0) return
+  console.log(past)
+  console.log(future)
+  const previous = last(past)
+  const newPast = dropLast(1, past)
+  const newHistory = {
+    history: {
+      past: newPast,
+      future: [dissoc(PATH, state), ...future]
+    }
+  }
+  return merge(previous, newHistory)
 }
 
 const History = () => ({
@@ -42,27 +61,20 @@ const History = () => ({
       }
     }),
     update: (state, actions, data) => {
-      console.log('State: ', state)
-      console.log('Data: ', data)
+      if (data.hasOwnProperty(PATH)) {
+        const prevPast = state.history.past
+        const prevFuture = state.history.future
+        const nextPast = data.history.past
+        const nextFuture = data.history.future
+        if (prevPast.length > nextPast.length) return data
+        if (prevFuture.length < nextFuture.length) return data
+      }
       return save(state, data)
     }
   },
   actions: {
     history: {
-      undo: (present) => {
-        const { past, future } = present.history
-        const previous = past[past.length - 1]
-        const newPast = past.slice(0, -1)
-        return merge(
-          previous,
-          {
-            history: {
-              past: newPast,
-              future: [present, ...future]
-            }
-          }
-        )
-      },
+      undo,
       redo: (present) => {
         const { past, future } = present.history
         const next = future[0]
@@ -81,10 +93,18 @@ const History = () => ({
   }
 })
 
-const TimeTravel = () => (state, actions) => (
+const TimeTravel = ({ state, actions }) => (
   <div className="time-travel">
-    <button onclick={actions.history.undo}>Undo</button>
-    <button onclick={actions.history.redo}>Redo</button>
+    <button
+      className="time-travel__button"
+      onclick={actions.history.undo}>
+      Undo
+    </button>
+    <button
+      className="time-travel__button"
+      onclick={actions.history.redo}>
+      Redo
+    </button>
   </div>
 )
 
