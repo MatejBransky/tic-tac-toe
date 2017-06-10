@@ -3,10 +3,7 @@ import set from 'ramda/src/set'
 import view from 'ramda/src/view'
 import merge from 'ramda/src/merge'
 import append from 'ramda/src/append'
-import equals from 'ramda/src/equals'
 import dissoc from 'ramda/src/dissoc'
-import pick from 'ramda/src/pick'
-import keys from 'ramda/src/keys'
 
 /*
 
@@ -30,7 +27,7 @@ const save = (prevState, nextState) => {
   return set(pastPath, newPast, nextState)
 }
 
-export default () => ({
+const History = () => ({
   state: {
     history: {
       past: [],
@@ -83,3 +80,15 @@ export default () => ({
     }
   }
 })
+
+const TimeTravel = () => (state, actions) => (
+  <div className="time-travel">
+    <button onclick={actions.history.undo}>Undo</button>
+    <button onclick={actions.history.redo}>Redo</button>
+  </div>
+)
+
+export {
+  History,
+  TimeTravel
+}
