@@ -1,3 +1,8 @@
 export default {
-  // action: (state, actions, data) => console.log(data)
+  // loaded: (state) => console.log('Loaded: ', state),
+  // update: (state, actions, data) => {
+  //   console.log('State ', state)
+  //   console.log('Data: ', data)
+  // },
+  action: (state, actions, data) => console.log('Action: ', data)
 }

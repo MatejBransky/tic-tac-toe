@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import test from 'tape'
 import flatten from 'ramda/src/flatten'
 import pipe from 'ramda/src/pipe'

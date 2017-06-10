@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import {
   delay,
   random,
@@ -125,7 +124,9 @@ export default {
       actions.game.continue()
     },
 
-    clearBoard: () => ({ board: times(y => times(x => createField('_', x, y), 3), 3) }),
+    clearBoard: () => ({ 
+      board: times(y => times(x => createField('_', x, y), 3), 3) 
+    }),
 
     showWinSeries: (state, actions, winSeries) =>
       flatten(winSeries).reduce((board, field) =>
