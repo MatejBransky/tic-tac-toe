@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { TimeTravel } from './history'
+import { UndoRedoButtons } from './history'
 
 export default (state, actions) => {
   const views = { Types, Marks, Game }
@@ -13,7 +13,7 @@ export default (state, actions) => {
 
 const Box = (props, children) => (
   <div className="box">
-    <TimeTravel {...props} />
+    <UndoRedoButtons {...props} />
     {children}
   </div>
 )

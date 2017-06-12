@@ -73,6 +73,8 @@ It will bundle js files from `src` folder to `bundle` folder and watch any chang
 - update dev environment (watcher for Sass and JS)
 - update old CSS with Sass variables and mixins
 - create separated npm scripts for publishing and for development
+- add undo/redo (history)
+- add time travelling
 
 ## License
 

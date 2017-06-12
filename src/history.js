@@ -57,7 +57,7 @@ const redo = (state) => {
 }
 
 // Plugin
-const History = () => ({
+const UndoManager = () => ({
   state: {
     [HISTORY]: {
       lastAction: '',
@@ -94,8 +94,11 @@ const History = () => ({
   }
 })
 
+
 // View
-const TimeTravel = ({ state, actions }) => (
+
+// Buttons Undo/Redo
+const UndoRedoButtons = ({ state, actions }) => (
   <div className="time-travel">
     <button
       className="time-travel__button"
@@ -110,7 +113,15 @@ const TimeTravel = ({ state, actions }) => (
   </div>
 )
 
+// History
+const History = ({ state, actions }) => {
+  const { past, future } = state[HISTORY]
+
+}
+
+
 export {
-  History,
-  TimeTravel
+  UndoManager,
+  UndoRedoButtons,
+  History
 }
