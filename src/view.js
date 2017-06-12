@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { UndoRedoButtons } from './history'
+import { UndoRedoButtons } from './undoManager'
 
 export default (state, actions) => {
   const views = { Types, Marks, Game }

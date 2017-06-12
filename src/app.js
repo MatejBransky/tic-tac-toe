@@ -4,7 +4,7 @@ import state from './state'
 import view from './view'
 import actions from './actions'
 import events from './events'
-import { UndoManager } from './history'
+import { UndoManager } from './undoManager'
 
 app({
   state,

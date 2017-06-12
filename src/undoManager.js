@@ -116,7 +116,12 @@ const UndoRedoButtons = ({ state, actions }) => (
 // History
 const History = ({ state, actions }) => {
   const { past, future } = state[HISTORY]
+  
+  return (
+    <div>
 
+    </div>
+  )
 }
 
 
