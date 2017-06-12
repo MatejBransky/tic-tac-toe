@@ -1,12 +1,10 @@
 import { h } from 'hyperapp'
-import lensPath from 'ramda/src/lensPath'
-import set from 'ramda/src/set'
-import view from 'ramda/src/view'
 import merge from 'ramda/src/merge'
-import append from 'ramda/src/append'
 import dissoc from 'ramda/src/dissoc'
 import last from 'ramda/src/last'
+import drop from 'ramda/src/drop'
 import dropLast from 'ramda/src/dropLast'
+import equals from 'ramda/src/equals'
 
 /*
 
@@ -18,77 +16,95 @@ po updatu, ktery vyvolal "actions.redo" se present state presune na konec pole p
 
 */
 
-const PATH = 'history'
+const HISTORY = 'history'
+
+const dissocHistory = (state) => dissoc(HISTORY, state)
 
 const save = (prevState, nextState) => {
-  const pastPath = lensPath([PATH, 'past'])
-  const prevStateWithoutHistory = dissoc(PATH, prevState)
-  const newPast = append(
-    prevStateWithoutHistory,
-    view(pastPath, nextState)
-  )
-  return set(pastPath, newPast, merge(prevState, nextState))
+  const { past } = prevState[HISTORY]
+  const newHistory = {
+    [HISTORY]: {
+      lastAction: 'save',
+      present: true,
+      past: [...past, dissocHistory(prevState)],
+      future: []
+    }
+  }
+  console.log('SAVE ======= Past: ', newHistory[HISTORY].past)
+  console.log('SAVE ======= Future: ', newHistory[HISTORY].future)
+  return merge(nextState, newHistory)
 }
 
 const undo = (state) => {
-  const { past, future } = state.history
+  const { past, future } = state[HISTORY]
   if (past.length === 0) return
-  console.log(past)
-  console.log(future)
   const previous = last(past)
   const newPast = dropLast(1, past)
   const newHistory = {
-    history: {
+    [HISTORY]: {
+      lastAction: 'undo',
+      present: false,
       past: newPast,
-      future: [dissoc(PATH, state), ...future]
+      future: [dissocHistory(state), ...future]
     }
   }
+  console.log('UNDO ======= Past: ', newHistory[HISTORY].past)
+  console.log('UNDO ======= Future: ', newHistory[HISTORY].future)
   return merge(previous, newHistory)
+}
+
+const redo = (state) => {
+  const { past, future } = state[HISTORY]
+  if (future.length === 0) return
+  const next = future[0]
+  const newFuture = drop(1, future)
+  const newHistory = {
+    [HISTORY]: {
+      lastAction: 'redo',
+      present: newFuture.length ? false : true,
+      past: [...past, dissocHistory(state)],
+      future: newFuture
+    }
+  }
+  console.log('REDO ======= Past: ', newHistory[HISTORY].past)
+  console.log('REDO ======= Future: ', newHistory[HISTORY].future)
+  return merge(next, newHistory)
 }
 
 const History = () => ({
   state: {
-    history: {
+    [HISTORY]: {
+      lastAction: '',
+      present: true,
       past: [],
       future: []
     }
   },
   events: {
-    loaded: (state) => merge(state, {
-      [PATH]: {
-        past: [],
-        future: []
-      }
-    }),
     update: (state, actions, data) => {
-      if (data.hasOwnProperty(PATH)) {
-        const prevPast = state.history.past
-        const prevFuture = state.history.future
-        const nextPast = data.history.past
-        const nextFuture = data.history.future
-        if (prevPast.length > nextPast.length) return data
-        if (prevFuture.length < nextFuture.length) return data
+      if (data.hasOwnProperty(HISTORY)) {
+        if (['undo', 'redo'].includes(data[HISTORY].lastAction)) {
+          if (equals(state[HISTORY], data[HISTORY])) {
+            console.log('New state in the middle of history')
+            return save(state, data)
+          } else {
+            console.log('Going through history')
+            return data
+          }
+        } else {
+          console.log('New state')
+          return save(state, data)
+        }
+      } else {
+        console.log('New state with partial update')
+        return save(state, merge(state, data))
       }
-      return save(state, data)
     }
   },
   actions: {
-    history: {
+    [HISTORY]: {
       undo,
-      redo: (present) => {
-        const { past, future } = present.history
-        const next = future[0]
-        const newFuture = future.slice(1)
-        return merge(
-          next,
-          {
-            history: {
-              past: [...past, present],
-              future: newFuture
-            }
-          }
-        )
-      }
+      redo
     }
   }
 })
@@ -97,13 +113,13 @@ const TimeTravel = ({ state, actions }) => (
   <div className="time-travel">
     <button
       className="time-travel__button"
-      onclick={actions.history.undo}>
-      Undo
+      onclick={actions[HISTORY].undo}>
+      Undo ({state[HISTORY].past.length})
     </button>
     <button
       className="time-travel__button"
-      onclick={actions.history.redo}>
-      Redo
+      onclick={actions[HISTORY].redo}>
+      Redo ({state[HISTORY].future.length})
     </button>
   </div>
 )
