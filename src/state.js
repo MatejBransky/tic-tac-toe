@@ -28,6 +28,7 @@ export default {
     mark: '',
     win: false
   }), 3), 3),
+  winSeries: [],
   message: '',
   waiting: false
 }

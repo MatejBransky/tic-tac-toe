@@ -1,4 +1,3 @@
-import concat from 'ramda/src/concat'
 import unnest from 'ramda/src/unnest'
 import keys from 'ramda/src/keys'
 import merge from 'ramda/src/merge'
@@ -6,26 +5,7 @@ import flatten from 'ramda/src/flatten'
 import pipe from 'ramda/src/pipe'
 import zipObj from 'ramda/src/zipObj'
 import groupWith from 'ramda/src/groupWith'
-import { random, getSeries } from './utils'
-
-// board: Array => boolean
-const isFull = (board) => {
-  const fieldsMarks = board.reduce((marks, row) =>
-    concat(marks, row.map(field => field.mark)), [])
-  return !fieldsMarks.includes('')
-}
-
-// board: Array => series: Array
-const getWinSeries = (board) => {
-  const series = getSeries(board)
-  return series.filter(serie => checkWinSerie(serie))
-}
-
-// serie: Array => boolean
-const checkWinSerie = (serie) =>
-  serie[0].mark !== '' &&
-  serie[0].mark === serie[1].mark &&
-  serie[1].mark === serie[2].mark
+import * as utils from './utils'
 
 // board: Array => emptyFields: Array
 const getEmptyFields = (board) => unnest(board).filter(field => !field.mark)
@@ -72,7 +52,7 @@ const setSelectionOfField = (method) => (numberOfGroups) => (fields) => {
 }
 
 // numberOfGroups: Number => function => fields: Array => field: Object
-const getRandomField = setSelectionOfField(random)
+const getRandomField = setSelectionOfField(utils.random)
 
 // method: Function => function => fields: Array => field: Object
 const getCoords = method => fields => {
@@ -108,7 +88,7 @@ const getAiMove = (state) => {
   const marks = state.players.map(player => player.mark)
   const emptyFields = getEmptyFields(state.board)
   return pipe(
-    getSeries,
+    utils.getSeries,
     appendStats(marks),
     appendSerieValue(codes),
     mapFields(emptyFields),
@@ -116,10 +96,9 @@ const getAiMove = (state) => {
   )(state.board)
 }
 
+
+
 export {
-  isFull,
-  checkWinSerie,
-  getWinSeries,
   getEmptyFields,
   getStats,
   appendStats,

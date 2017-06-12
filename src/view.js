@@ -29,12 +29,9 @@ const Types = ({ state, actions }) => (
           <button
             className="options__button"
             key={idType}
-            onclick={() => {
-              actions.types.setGame(type)
-              actions.go('Marks')
-            }}>
+            onclick={() => actions.types.process({ type, page: 'Marks' })}>
             {type.names.map((name, idName) =>
-              <div key={idName} className="options__player">{name} </div>
+              <div key={idName} className="options__player">{name}</div>
             )}
           </button>
         )}
@@ -57,11 +54,8 @@ const Marks = ({ state, actions }) => (
         </div>
       </div>
       <div className="options">
-        <button onclick={actions.marks.switchMarks}>Switch</button>
-        <button onclick={() => {
-          actions.marks.setGame()
-          actions.go('Game')
-        }}>
+        <button onclick={actions.marks.switch}>Switch</button>
+        <button onclick={() => actions.marks.process({ page: 'Game' })}>
           Submit
         </button>
       </div>
@@ -108,7 +102,10 @@ const Game = ({ state, actions }) => (
                 key={x}
                 className={`board__field ${field.win ? 'board__field--win' : ''}`}
                 disabled={state.waiting}
-                onclick={() => actions.game.clickField({ x, y })}>
+                onclick={() => {
+                  actions.game.clickField({ x, y })
+                  if (state.ai) actions.game.processAi()
+                }}>
                 {field.mark}
               </button>
             )}
