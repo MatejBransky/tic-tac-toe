@@ -20,8 +20,6 @@ const save = (prevState, nextState) => {
       future: []
     }
   }
-  console.log('SAVE ======= Past: ', newHistory[HISTORY].past)
-  console.log('SAVE ======= Future: ', newHistory[HISTORY].future)
   return merge(nextState, newHistory)
 }
 
@@ -37,8 +35,6 @@ const undo = (state) => {
       future: [dissocHistory(state), ...future]
     }
   }
-  console.log('UNDO ======= Past: ', newHistory[HISTORY].past)
-  console.log('UNDO ======= Future: ', newHistory[HISTORY].future)
   return merge(previous, newHistory)
 }
 
@@ -54,8 +50,6 @@ const redo = (state) => {
       future: newFuture
     }
   }
-  console.log('REDO ======= Past: ', newHistory[HISTORY].past)
-  console.log('REDO ======= Future: ', newHistory[HISTORY].future)
   return merge(next, newHistory)
 }
 
@@ -72,18 +66,18 @@ const History = () => ({
       if (data.hasOwnProperty(HISTORY)) {
         if (['undo', 'redo'].includes(data[HISTORY].lastAction)) {
           if (equals(state[HISTORY], data[HISTORY])) {
-            console.log('New state in the middle of history')
+            // new state during browsing of history
             return save(state, data)
           } else {
-            console.log('Going through history')
+            // browsing history
             return data
           }
         } else {
-          console.log('New state')
+          // full update new state
           return save(state, data)
         }
       } else {
-        console.log('New state with partial update')
+        // partial update of state
         return save(state, merge(state, data))
       }
     }
