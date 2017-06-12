@@ -6,18 +6,9 @@ import drop from 'ramda/src/drop'
 import dropLast from 'ramda/src/dropLast'
 import equals from 'ramda/src/equals'
 
-/*
-
-nekde musi byt ulozeny undoList (past, present, future) - NE ve state (mozna HOC?)
-po eventu "loaded" se ulozi prvni state do present
-po updatu, ktery nevyvolal "actions.undo/redo" se predchozi state ulozi na konec past a aktualni state se ulozi do present
-po updatu, ktery vyvolal "actions.undo" se present state presune na zacatek pole future a posledni state z past se vyjme a vlozi do present a vrati se jako novy state
-po updatu, ktery vyvolal "actions.redo" se present state presune na konec pole past a prvni state ve future se vyjme a vlozi do present
-
-*/
-
 const HISTORY = 'history'
 
+// state: Object => state without history: Object
 const dissocHistory = (state) => dissoc(HISTORY, state)
 
 const save = (prevState, nextState) => {
@@ -25,7 +16,6 @@ const save = (prevState, nextState) => {
   const newHistory = {
     [HISTORY]: {
       lastAction: 'save',
-      present: true,
       past: [...past, dissocHistory(prevState)],
       future: []
     }
@@ -43,7 +33,6 @@ const undo = (state) => {
   const newHistory = {
     [HISTORY]: {
       lastAction: 'undo',
-      present: false,
       past: newPast,
       future: [dissocHistory(state), ...future]
     }
@@ -61,7 +50,6 @@ const redo = (state) => {
   const newHistory = {
     [HISTORY]: {
       lastAction: 'redo',
-      present: newFuture.length ? false : true,
       past: [...past, dissocHistory(state)],
       future: newFuture
     }
@@ -75,7 +63,6 @@ const History = () => ({
   state: {
     [HISTORY]: {
       lastAction: '',
-      present: true,
       past: [],
       future: []
     }
