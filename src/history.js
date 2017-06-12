@@ -11,6 +11,7 @@ const HISTORY = 'history'
 // state: Object => state without history: Object
 const dissocHistory = (state) => dissoc(HISTORY, state)
 
+// prevState: Object, nextState: Object => nextState with updated history: Object
 const save = (prevState, nextState) => {
   const { past } = prevState[HISTORY]
   const newHistory = {
@@ -23,6 +24,7 @@ const save = (prevState, nextState) => {
   return merge(nextState, newHistory)
 }
 
+// state: Object => previous state with history: Object
 const undo = (state) => {
   const { past, future } = state[HISTORY]
   if (past.length === 0) return
@@ -38,6 +40,7 @@ const undo = (state) => {
   return merge(previous, newHistory)
 }
 
+// state: Object => next state with history: Object
 const redo = (state) => {
   const { past, future } = state[HISTORY]
   if (future.length === 0) return
@@ -53,6 +56,7 @@ const redo = (state) => {
   return merge(next, newHistory)
 }
 
+// Plugin
 const History = () => ({
   state: {
     [HISTORY]: {
@@ -90,6 +94,7 @@ const History = () => ({
   }
 })
 
+// View
 const TimeTravel = ({ state, actions }) => (
   <div className="time-travel">
     <button
