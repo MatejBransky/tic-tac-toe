@@ -1,5 +1,4 @@
 import concat from 'ramda/src/concat'
-import merge from 'ramda/src/merge'
 import assocPath from 'ramda/src/assocPath'
 import * as utils from './utils'
 

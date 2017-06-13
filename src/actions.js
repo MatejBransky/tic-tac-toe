@@ -16,7 +16,8 @@ import {
 import * as utils from './utils'
 import * as helpers from './helpers'
 import T from 'ramda/src/T'
-import when from 'ramda/src/when'
+import F from 'ramda/src/F'
+import ifElse from 'ramda/src/ifElse'
 import cond from 'ramda/src/cond'
 import prop from 'ramda/src/prop'
 import pipe from 'ramda/src/pipe'
@@ -54,18 +55,23 @@ export default {
 
   game: {
     clickField: (state, actions, { x, y }) =>
-      when(clickOn, pipe(
-        setField,
-        setWinSeries,
-        cond([
-          [isWin, actions.game.win],
-          [isFull, actions.game.draw],
-          [T, setCurrent]
-        ]),
-        getState
-      ))({ state, x, y }),
+      ifElse(
+        clickOn,
+        pipe(
+          setField,
+          setWinSeries,
+          cond([
+            [isWin, actions.game.win],
+            [isFull, actions.game.draw],
+            [T, setCurrent]
+          ]),
+          getState
+        ),
+        F
+      )({ state, x, y }),
 
     win: async (state, actions) => {
+      // TODO
       actions.game.wait()
       await utils.delay(300)
       actions.game.showWinSeries(state.winSeries)
@@ -75,12 +81,14 @@ export default {
     },
 
     draw: async (state, actions) => {
+      // TODO
       actions.game.wait()
       await utils.delay(500)
       actions.game.setMessage('draw')
     },
 
     setMessage: (state, actions, msg = 'empty') => {
+      // TODO
       const mark = state.players[state.current].mark
       const message = {
         win: `${mark} wins!`,

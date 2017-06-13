@@ -67,22 +67,27 @@ const UndoManager = () => ({
   },
   events: {
     update: (state, actions, data) => {
-      if (data.hasOwnProperty(HISTORY)) {
-        if (['undo', 'redo'].includes(data[HISTORY].lastAction)) {
-          if (equals(state[HISTORY], data[HISTORY])) {
-            // new state during browsing of history
-            return save(state, data)
+      if (data) {
+        if (data.hasOwnProperty(HISTORY)) {
+          if (['undo', 'redo'].includes(data[HISTORY].lastAction)) {
+            if (equals(state[HISTORY], data[HISTORY])) {
+              // new state during browsing of history
+              return save(state, data)
+            } else {
+              // browsing history
+              return data
+            }
           } else {
-            // browsing history
-            return data
+            // full update new state
+            return save(state, data)
           }
         } else {
-          // full update new state
-          return save(state, data)
+          // partial update of state
+          return save(state, merge(state, data))
         }
       } else {
-        // partial update of state
-        return save(state, merge(state, data))
+        // falsy value
+        return state
       }
     }
   },
@@ -116,7 +121,7 @@ const UndoRedoButtons = ({ state, actions }) => (
 // History
 const History = ({ state, actions }) => {
   const { past, future } = state[HISTORY]
-  
+
   return (
     <div>
 

@@ -73,8 +73,7 @@ const Game = ({ state, actions }) => (
         <h1>{state.message}</h1>
         <p className="small">Click to continue</p>
       </div>
-    )
-    }
+    )}
     < div >
       <div className="status">
         <div className="status__players">
