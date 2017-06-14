@@ -8,7 +8,7 @@ import {
   setField,
   setWinSeries,
   isFull,
-  setCurrent,
+  setNext,
   increaseScore,
   setMessage,
   clearWinSeries,
@@ -57,44 +57,53 @@ export default {
     clickField: (state, actions, { x, y }) =>
       ifElse(clickOn, pipe(
         setField,
-        setCurrent,
+        setNext,
         setWinSeries,
         getState
       ), () => null)({ state, x, y }),
 
     nextAction: async (state, actions) => {
+      actions.game.wait()
       if (state.winSeries.length > 0) {
         actions.game.win()
       } else if (isFull(state.board)) {
         actions.game.draw()
-      } else if (state.ai && state.current) { // PC is always player n°1
+      } else if (state.ai && state.next) { // PC is always player n°1
         await actions.game.processAi()
+      } else {
+        actions.game.continue()
       }
     },
 
     win: async (state, actions) => {
-      actions.game.wait()
       await utils.delay(300)
       actions.game.showWinSeries()
       await utils.delay(1000)
       actions.game.showMessage('win')
+      actions.game.increaseScore(state.next ? 0 : 1)
     },
 
     draw: async (state, actions) => {
-      actions.game.wait()
       await utils.delay(500)
       actions.game.showMessage('draw')
     },
 
     processAi: async (state, actions) => {
-      actions.game.wait()
       const aiCoord = helpers.getAiMove(state)
       await utils.delay(500)
       actions.game.process(aiCoord)
     },
 
-    showMessage: (state, actions, msg) => pipe(
+    showWinSeries: (state) =>
+      flatten(state.winSeries).reduce((board, field) =>
+        assocPath(['board', field.y, field.x, 'win'], true, board), state),
+
+    increaseScore: (state, actions, player) => pipe(
       increaseScore,
+      getState
+    )({ state, player }),
+
+    showMessage: (state, actions, msg) => pipe(
       setMessage,
       getState
     )({ state, msg }),
@@ -113,16 +122,11 @@ export default {
 
     clearGame: (state) => pipe(
       setMessage,
-      setCurrent,
+      setNext,
       clearWinSeries,
       clearBoard,
       getState
-    )({ state }),
-
-    showWinSeries: (state) =>
-      flatten(state.winSeries).reduce((board, field) =>
-        assocPath(['board', field.y, field.x, 'win'], true, board), state),
-
+    )({ state, next: utils.random }),
 
     restart: (state, actions) => {
       if (state.message === '') {

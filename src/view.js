@@ -77,8 +77,8 @@ const Game = ({ state, actions }) => (
         <div className="status__players">
           {state.players.map((player, id) =>
             <div key={id} className={'status__player '
-              + ((id === state.current && state.message === '')
-                ? 'status__player--current'
+              + ((id === state.next && state.message === '')
+                ? 'status__player--next'
                 : '')}>
               <h1>{player.name}</h1>
               <p><strong>{player.mark}</strong></p>

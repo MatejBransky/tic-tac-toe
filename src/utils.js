@@ -11,12 +11,12 @@ const delay = (time) => new Promise(resolve => setTimeout(resolve, time))
  * Returns function for getting value (integer) from specified range
  * @param {Number} input From zero to one
  */
-const setRandom = (input = 0) => (start = 0, end = 1) => Math.round(input * (end - start) + start)
+const setRandom = (method = () => 0) => (start = 0, end = 1) => Math.round(method() * (end - start) + start)
 
 /**
  * Returns value from specified range (default range: from 0 to 1)
  */
-const random = setRandom(Math.random())
+const random = setRandom(Math.random)
 
 /**
  * Returns field object with predefined properties

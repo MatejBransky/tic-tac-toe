@@ -21,7 +21,7 @@ export default {
     { name: '', mark: '', score: 0 }
   ],
   ai: true,
-  current: 0,
+  next: 0,
   board: times(y => times(x => ({
     x,
     y,
@@ -29,6 +29,10 @@ export default {
     win: false
   }), 3), 3),
   winSeries: [],
+  messages: {
+    win: (player) => `${player} wins!`,
+    draw: () => 'It\'s a draw'
+  },
   message: '',
   waiting: false
 }

@@ -27,21 +27,18 @@ const setMarks = (data) =>
   })
 
 const clickOn = (data) =>
-  !(data.state.current
-    && data.state.ai
-    || data.state.message !== ''
+  !(data.state.message !== ''
     || data.state.board[data.y][data.x].mark !== '')
 
 const setField = (data) => {
   const { state, x, y } = data
   return assocPath(
     ['state', 'board', y, x, 'mark'],
-    state.players[state.current].mark,
+    state.players[state.next].mark,
     data
   )
 }
 
-// serie: Array => boolean
 const isWinSerie = (serie) =>
   serie[0].mark !== '' &&
   serie[0].mark === serie[1].mark &&
@@ -62,36 +59,35 @@ const isFull = (board) => {
   return !fieldsMarks.includes('')
 }
 
-const setCurrent = (data) => assocPath(
-  ['state', 'current'],
-  data.state.current ? 0 : 1,
+const setNext = (data) => assocPath(
+  ['state', 'next'],
+  data.next
+    ? data.next()
+    : (data.state.next ? 0 : 1),
   data
 )
 
 const increaseScore = (data) => {
-  const score = lensPath(['state', 'players', data.state.current, 'score'])
+  const player = [0, 1].includes(data.player) ? data.player : data.state.next
+  const score = lensPath(['state', 'players', player, 'score'])
   return over(score, (value) => value + 1, data)
 }
 
 const setMessage = (data) => {
-  const mark = data.state.players[data.state.current].mark
-  const message = {
-    win: `${mark} wins!`,
-    draw: 'It\'s a draw',
-    empty: ''
-  }
+  const current = data.state.next ? 0 : 1
+  const mark = data.state.players[current].mark
+  const messages = data.state.messages
   return assocPath(
     ['state', 'message'],
-    message[data.msg || 'empty'],
+    data.msg
+      ? messages[data.msg](mark)
+      : '',
     data
   )
 }
 
-const clearWinSeries = (data) => assocPath(
-  ['state', 'winSeries'],
-  [],
-  data
-)
+const clearWinSeries = (data) =>
+  assocPath(['state', 'winSeries'], [], data)
 
 const clearBoard = (data) => assocPath(
   ['state', 'board'],
@@ -110,7 +106,7 @@ export {
   setWinSeries,
   isWin,
   isFull,
-  setCurrent,
+  setNext,
   increaseScore,
   setMessage,
   clearWinSeries,
