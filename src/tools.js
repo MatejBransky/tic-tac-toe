@@ -82,7 +82,7 @@ const setMessage = (data) => {
   }
   return assocPath(
     ['state', 'message'],
-    message[data.msg || ''],
+    message[data.msg || 'empty'],
     data
   )
 }

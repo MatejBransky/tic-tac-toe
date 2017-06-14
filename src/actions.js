@@ -16,7 +16,6 @@ import {
 } from './tools'
 import * as utils from './utils'
 import * as helpers from './helpers'
-import F from 'ramda/src/F'
 import ifElse from 'ramda/src/ifElse'
 import pipe from 'ramda/src/pipe'
 import flatten from 'ramda/src/flatten'
@@ -61,13 +60,13 @@ export default {
         setCurrent,
         setWinSeries,
         getState
-      ), F)({ state, x, y }),
+      ), () => null)({ state, x, y }),
 
     nextAction: async (state, actions) => {
       if (state.winSeries.length > 0) {
-        await actions.game.win()
+        actions.game.win()
       } else if (isFull(state.board)) {
-        await actions.game.draw()
+        actions.game.draw()
       } else if (state.ai && state.current) { // PC is always player n°1
         await actions.game.processAi()
       }
@@ -109,6 +108,7 @@ export default {
     startNewMatch: async (state, actions) => {
       actions.game.clearGame()
       await actions.game.nextAction()
+      actions.game.continue()
     },
 
     clearGame: (state) => pipe(
