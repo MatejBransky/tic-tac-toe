@@ -1,6 +1,13 @@
 import concat from 'ramda/src/concat'
+import lensPath from 'ramda/src/lensPath'
+import over from 'ramda/src/over'
 import assocPath from 'ramda/src/assocPath'
+import times from 'ramda/src/times'
 import * as utils from './utils'
+
+const setPage = (data) => assocPath(['state', 'page'], data.page, data)
+
+const getState = (data) => data.state
 
 const setAi = (data) => assocPath(['state', 'ai'], data.type.ai, data)
 
@@ -49,8 +56,8 @@ const setWinSeries = (data) => {
 
 const isWin = (data) => data.state.winSeries.length > 0
 
-const isFull = (data) => {
-  const fieldsMarks = data.state.board.reduce((marks, row) =>
+const isFull = (board) => {
+  const fieldsMarks = board.reduce((marks, row) =>
     concat(marks, row.map(field => field.mark)), [])
   return !fieldsMarks.includes('')
 }
@@ -61,23 +68,51 @@ const setCurrent = (data) => assocPath(
   data
 )
 
+const increaseScore = (data) => {
+  const score = lensPath(['state', 'players', data.state.current, 'score'])
+  return over(score, (value) => value + 1, data)
+}
 
-const setPage = (data) => assocPath(['state', 'page'], data.page, data)
+const setMessage = (data) => {
+  const mark = data.state.players[data.state.current].mark
+  const message = {
+    win: `${mark} wins!`,
+    draw: 'It\'s a draw',
+    empty: ''
+  }
+  return assocPath(
+    ['state', 'message'],
+    message[data.msg || ''],
+    data
+  )
+}
 
-const getState = (data) => data.state
+const clearWinSeries = (data) => assocPath(
+  ['state', 'winSeries'],
+  [],
+  data
+)
+
+const clearBoard = (data) => assocPath(
+  ['state', 'board'],
+  times(y => times(x => utils.createField('_', x, y), 3), 3),
+  data
+)
 
 export {
   setPage,
   getState,
-
   setAi,
   setNames,
   setMarks,
-
   clickOn,
   setField,
   setWinSeries,
   isWin,
   isFull,
-  setCurrent
+  setCurrent,
+  increaseScore,
+  setMessage,
+  clearWinSeries,
+  clearBoard
 }

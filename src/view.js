@@ -1,5 +1,4 @@
 import { h } from 'hyperapp'
-import { UndoRedoButtons } from './undoManager'
 
 export default (state, actions) => {
   const views = { Types, Marks, Game }
@@ -13,7 +12,6 @@ export default (state, actions) => {
 
 const Box = (props, children) => (
   <div className="box">
-    <UndoRedoButtons {...props} />
     {children}
   </div>
 )
@@ -101,10 +99,7 @@ const Game = ({ state, actions }) => (
                 key={x}
                 className={`board__field ${field.win ? 'board__field--win' : ''}`}
                 disabled={state.waiting}
-                onclick={() => {
-                  actions.game.clickField({ x, y })
-                  if (state.ai) actions.game.processAi()
-                }}>
+                onclick={() => actions.game.process({ x, y })}>
                 {field.mark}
               </button>
             )}

@@ -1,42 +1,37 @@
 import {
   setPage,
   getState,
-
   setAi,
   setNames,
   setMarks,
-
   clickOn,
   setField,
   setWinSeries,
-  isWin,
   isFull,
-  setCurrent
+  setCurrent,
+  increaseScore,
+  setMessage,
+  clearWinSeries,
+  clearBoard
 } from './tools'
 import * as utils from './utils'
 import * as helpers from './helpers'
-import T from 'ramda/src/T'
 import F from 'ramda/src/F'
 import ifElse from 'ramda/src/ifElse'
-import cond from 'ramda/src/cond'
-import prop from 'ramda/src/prop'
 import pipe from 'ramda/src/pipe'
 import flatten from 'ramda/src/flatten'
-import lensPath from 'ramda/src/lensPath'
-import view from 'ramda/src/view'
-import set from 'ramda/src/set'
-import times from 'ramda/src/times'
 import assocPath from 'ramda/src/assocPath'
 import reverse from 'ramda/src/reverse'
 
 export default {
   types: {
-    process: (state, actions, { type, page }) => pipe(
-      setAi,
-      setNames,
-      setPage,
-      getState
-    )({ state, type, page })
+    process: (state, actions, { type, page }) =>
+      pipe(
+        setAi,
+        setNames,
+        setPage,
+        getState
+      )({ state, type, page })
   },
 
   marks: {
@@ -46,99 +41,88 @@ export default {
       state
     ),
 
-    process: (state, actions, { page }) => pipe(
-      setMarks,
-      setPage,
-      getState
-    )({ state, page })
+    process: (state, actions, { page }) =>
+      pipe(
+        setMarks,
+        setPage,
+        getState
+      )({ state, page })
   },
 
   game: {
+    process: (state, actions, coord) => {
+      actions.game.clickField(coord)
+      actions.game.nextAction()
+    },
+
     clickField: (state, actions, { x, y }) =>
-      ifElse(
-        clickOn,
-        pipe(
-          setField,
-          setWinSeries,
-          cond([
-            [isWin, actions.game.win],
-            [isFull, actions.game.draw],
-            [T, setCurrent]
-          ]),
-          getState
-        ),
-        F
-      )({ state, x, y }),
+      ifElse(clickOn, pipe(
+        setField,
+        setCurrent,
+        setWinSeries,
+        getState
+      ), F)({ state, x, y }),
+
+    nextAction: async (state, actions) => {
+      if (state.winSeries.length > 0) {
+        await actions.game.win()
+      } else if (isFull(state.board)) {
+        await actions.game.draw()
+      } else if (state.ai && state.current) { // PC is always player n°1
+        await actions.game.processAi()
+      }
+    },
 
     win: async (state, actions) => {
-      // TODO
       actions.game.wait()
       await utils.delay(300)
-      actions.game.showWinSeries(state.winSeries)
+      actions.game.showWinSeries()
       await utils.delay(1000)
-      actions.game.increaseScore()
-      actions.game.setMessage('win')
+      actions.game.showMessage('win')
     },
 
     draw: async (state, actions) => {
-      // TODO
       actions.game.wait()
       await utils.delay(500)
-      actions.game.setMessage('draw')
+      actions.game.showMessage('draw')
     },
 
-    setMessage: (state, actions, msg = 'empty') => {
-      // TODO
-      const mark = state.players[state.current].mark
-      const message = {
-        win: `${mark} wins!`,
-        draw: 'It\'s a draw',
-        empty: ''
-      }
-      return { message: message[msg] }
+    processAi: async (state, actions) => {
+      actions.game.wait()
+      const aiCoord = helpers.getAiMove(state)
+      await utils.delay(500)
+      actions.game.process(aiCoord)
     },
 
-    closeMessage: (state, actions) => {
-      actions.game.setMessage()
-      actions.game.startNewMatch() // clear board
-    },
+    showMessage: (state, actions, msg) => pipe(
+      increaseScore,
+      setMessage,
+      getState
+    )({ state, msg }),
+
+    closeMessage: (state, actions) => actions.game.startNewMatch(),
 
     wait: () => ({ waiting: true }),
 
     continue: () => ({ waiting: false }),
 
     startNewMatch: async (state, actions) => {
-      actions.game.setCurrent()
-      actions.game.clearBoard()
-      await actions.game.processAi()
-      actions.game.continue()
+      actions.game.clearGame()
+      await actions.game.nextAction()
     },
 
-    clearBoard: () => ({
-      board: times(y => times(x => utils.createField('_', x, y), 3), 3)
-    }),
+    clearGame: (state) => pipe(
+      setMessage,
+      setCurrent,
+      clearWinSeries,
+      clearBoard,
+      getState
+    )({ state }),
 
-    showWinSeries: (state, actions, winSeries) =>
-      flatten(winSeries).reduce((board, field) =>
+    showWinSeries: (state) =>
+      flatten(state.winSeries).reduce((board, field) =>
         assocPath(['board', field.y, field.x, 'win'], true, board), state),
 
-    increaseScore: (state) => {
-      const score = lensPath(['players', state.current, 'score'])
-      const value = view(score, state) + 1
-      return set(score, value, state)
-    },
-
-    processAi: async (state, actions) => {
-      if (state.ai && state.current) { // PC is always player n°1
-        actions.game.wait()
-        const aiCoord = helpers.getAiMove(state)
-        await utils.delay(500)
-        actions.game.setField(aiCoord)
-        actions.game.process()
-      } else {
-        actions.game.continue()
-      }
-    },
 
     restart: (state, actions) => {
       if (state.message === '') {
